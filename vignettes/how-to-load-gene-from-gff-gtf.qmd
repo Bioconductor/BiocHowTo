@@ -1,0 +1,75 @@
+---
+title: How to load a gene model from a GFF or GTF file
+author: Bioconductor Core Team
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{How to load a gene model from a GFF or GTF file}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+    opts_chunk: 
+        collapse: true
+        comment: '#>'
+format:
+    html:
+        toc: true
+        html-math-method: mathjax
+---
+
+```{r}
+#| echo: false
+
+suppressPackageStartupMessages({
+    library(BiocStyle)
+})
+```
+
+A **gene model** is essentially a set of annotations that
+describes the genomic locations of the known genes, transcripts, exons, and CDS, for
+a given organism. The a standardized file format to hold gene models is a **[GFF or GTF](https://useast.ensembl.org/info/website/upload/gff.html)**. In Bioconductor, gene model information is typically represented as a TxDb object but also sometimes as a GRanges or GRangesList object. We can use the `makeTxDbFromGFF()` function from the *[txdbmaker](https://bioconductor.org/packages/release/bioc/html/txdbmaker.html)* package to import a GFF or GTF file as a *TxDb* object.
+
+
+# Bioconductor packages used in this document
+
+* `r Biocpkg("txdbmaker")`
+
+# How to load a gene model from a GFF or GTF file
+
+We will use a small .gff3 file provided by the *[txdbmaker](https://bioconductor.org/packages/release/bioc/html/txdbmaker.html)* package.
+
+```{r, warning=FALSE, message=FALSE}
+suppressPackageStartupMessages({
+    library(txdbmaker)
+})
+
+ gff_file <- system.file("extdata", "GFF3_files", "a.gff3", package="txdbmaker")
+ 
+ txdb <- makeTxDbFromGFF(gff_file, format="gff3")
+ txdb
+
+```
+
+
+See `?makeTxDbFromGFF` in the *[txdbmaker](https://bioconductor.org/packages/release/bioc/html/txdbmaker.html)* package for more information.
+
+Extract the exon coordinates grouped by gene from this gene model:
+
+```{r}
+
+ exonsBy(txdb, by="gene")
+
+
+```
+
+
+# Session info
+
+<details>
+<summary><b>
+Click to display session info
+</b></summary>
+```{r}
+sessionInfo()
+```
+</details>
+
