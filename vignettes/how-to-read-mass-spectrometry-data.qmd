@@ -3,7 +3,7 @@ title: How to read mass spectrometry data
 author: Laurent Gatto
 date: "`r Sys.Date()`"
 vignette: >
-  %\VignetteIndexEntry{EDIT:HowToTitle}
+  %\VignetteIndexEntry{How to read mass spectrometry data}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 knitr:
@@ -24,14 +24,7 @@ suppressPackageStartupMessages({
 })
 ```
 
-EDIT:Short introduction
-
 # Bioconductor packages used in this document
-
-EDIT:Add list of packages used in the HowTo. Use `r Biocpkg("PkgName")` to
-refer to Bioconductor packages, and similarly for other package sources
-(see https://bioconductor.org/packages/release/bioc/vignettes/BiocStyle/inst/doc/AuthoringRmdVignettes.html#4_Style_macros). Example:
-
 
 * `r Biocpkg("Spectra")`
 * `r Biocpkg("mzR")`
@@ -52,8 +45,8 @@ fls
 ```
 
 We can now use the `Spectra()` constructor function to create an
-object of class `Spectra` that contains the raw data data. Note that
-the `mzR` package is needed to read the content of the mzML files.
+object of class `Spectra` that contains the raw data. Note that the
+`mzR` package is needed to read the content of the mzML files.
 
 
 ```{r}
