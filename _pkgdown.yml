@@ -8,3 +8,7 @@ articles:
   - how-to-read-single-end-reads-from-bam-file
   - how-to-read-paired-end-reads-from-bam-file
   - how-to-read-big-bam-file-in-chunks
+  
+- title: Working with gene models
+  contents:
+  - how-to-load-gene-from-gff-gtf

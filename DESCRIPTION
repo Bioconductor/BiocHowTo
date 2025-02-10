@@ -36,6 +36,10 @@ Authors@R: c(
         "Vince", "Carey",
         role = "aut"
     )
+    person(
+        "Jenny", "Drnevich",
+        role = "aut"
+    )
   )
 Description: This package provides a crowd-sourced collection of 'How To' 
     documents related to Bioconductor packages.
@@ -52,4 +56,5 @@ Imports:
     quarto,
     BiocStyle,
     GenomicAlignments,
-    pasillaBamSubset
+    pasillaBamSubset,
+    txdbmaker
