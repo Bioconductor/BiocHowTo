@@ -35,21 +35,28 @@ Authors@R: c(
     person(
         "Vince", "Carey",
         role = "aut"
+    ),
+    person(
+        "Laurent", "Gatto",
+        role = "aut"
     )
   )
-Description: This package provides a crowd-sourced collection of 'How To' 
+Description: This package provides a crowd-sourced collection of 'How To'
     documents related to Bioconductor packages.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: false
-Suggests: 
+Suggests:
     knitr,
     rmarkdown
 RoxygenNote: 7.3.2
-VignetteBuilder: 
+VignetteBuilder:
     quarto
-Imports: 
+Imports:
     quarto,
     BiocStyle,
     GenomicAlignments,
-    pasillaBamSubset
+    pasillaBamSubset,
+    mzR,
+    MsDataHub,
+    Spectra
