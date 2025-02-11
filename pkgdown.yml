@@ -3,9 +3,10 @@ pkgdown: 2.1.1.9000
 pkgdown_sha: 18cca452d736fea33d47b19b4ef4973db9104a75
 articles:
   how-to-read-big-bam-file-in-chunks: how-to-read-big-bam-file-in-chunks.html
+  how-to-read-mass-spectrometry-data: how-to-read-mass-spectrometry-data.html
   how-to-read-paired-end-reads-from-bam-file: how-to-read-paired-end-reads-from-bam-file.html
   how-to-read-single-end-reads-from-bam-file: how-to-read-single-end-reads-from-bam-file.html
-last_built: 2025-02-10T14:40Z
+last_built: 2025-02-11T16:46Z
 urls:
   reference: https://csoneson.github.io/BiocHowTo/reference
   article: https://csoneson.github.io/BiocHowTo/articles
