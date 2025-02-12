@@ -12,3 +12,7 @@ articles:
 - title: Mass spectrometry
   contents:
   - how-to-read-mass-spectrometry-data
+
+- title: Accessing genomic annotation data
+  contents:
+  - how-to-retrieve-gene-model-from-annotationhub

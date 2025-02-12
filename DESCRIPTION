@@ -39,6 +39,10 @@ Authors@R: c(
     person(
         "Laurent", "Gatto",
         role = "aut"
+    ),
+    person(
+        "Pedro", "Baldoni",
+        role = "aut"
     )
   )
 Description: This package provides a crowd-sourced collection of 'How To'
@@ -59,4 +63,5 @@ Imports:
     pasillaBamSubset,
     mzR,
     MsDataHub,
-    Spectra
+    Spectra,
+    AnnotationHub
