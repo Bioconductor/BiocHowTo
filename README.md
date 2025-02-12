@@ -1,7 +1,8 @@
 # BiocHowTo
 
-This repository contains short, stand-alone "How To" documents related to 
-Bioconductor. 
+This repository contains stand-alone "How To" documents related to 
+Bioconductor. A HowTo should be short, and focus on how to solve a 
+well-defined question using one or more Bioconductor packages. 
 
 ## How to contribute
 
@@ -26,8 +27,12 @@ usethis::use_package("name_of_new_dependency")
 `_pkgdown.yml` file.
 7. Push the changes to your forked repository and open a pull request to 
 the `devel` branch of the parent repository.
+8. All submissions will be reviewed by the Bioconductor Training Committee. 
+
 
 ## How to suggest a new topic
 
 To suggest a new topic for a HowTo, open an issue and provide some more
-details of your suggestion. 
+details of your suggestion. If you would like to take on one of the open 
+issues, either assign yourself (if possible), or comment in the issue, and 
+one of the administrators can assign you. 
