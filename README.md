@@ -14,11 +14,12 @@ the content. Note that the title of the vignette should be added both to the
 3. Test the vignette locally in a fresh R session, to make sure that it is 
 self-contained and runs without errors.
 4. Add your name to the `Author` list in the `DESCRIPTION` file.
-5. Add any new package that you are using to the list of dependencies of the 
-package, e.g. using
+5. If your HowTo is using packages that are not already included among the 
+dependencies of `BiocHowTo`, please add them to the list of `Imports` in the 
+`DESCRIPTION` file. One way to do this is via the `usethis` package:
 
 ```
-usethis::use_package("new_dependency")
+usethis::use_package("name_of_new_dependency")
 ```
 
 6. Add the new vignette to a suitable section under 'Articles' in the 
