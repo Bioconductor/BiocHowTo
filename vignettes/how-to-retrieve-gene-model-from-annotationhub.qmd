@@ -1,0 +1,101 @@
+---
+title: How to retrieve a gene model from AnnotationHub
+author: Bioconductor Core Team
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{How to retrieve a gene model from AnnotationHub}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+    opts_chunk:
+        collapse: true
+        comment: '#>'
+format:
+    html:
+        toc: true
+        html-math-method: mathjax
+---
+
+```{r}
+#| echo: false
+
+suppressPackageStartupMessages({
+    library(BiocStyle)
+})
+```
+
+This HowTo has been adapted from the list of HowTos provided in the 
+[vignette](https://bioconductor.org/packages/release/bioc/vignettes/GenomicRanges/inst/doc/GenomicRangesHOWTOs.pdf)
+for the `r Biocpkg("GenomicRanges")` Bioconductor package. 
+
+# Bioconductor packages used in this document
+
+* `r Biocpkg("AnnotationHub")`
+
+# How to retrieve a gene model from *AnnotationHub*
+
+When a gene model is not available as a `GRanges` or `GRangesList` object or as 
+a \Bioconductor{} data package, it may be available on `r Biocpkg("AnnotationHub")`.
+In this *HOWTO*, will look for a gene model for Drosophila melanogaster
+on `r Biocpkg("AnnotationHub")`. Create a `hub' and then filter on Drosophila 
+melanogaster:
+
+```{r}
+suppressPackageStartupMessages({
+    library(AnnotationHub)
+})
+### Internet connection required!
+hub <- AnnotationHub()
+hub <- subset(hub, hub$species=='Drosophila melanogaster')
+```
+
+There are `r length(hub)` files that match Drosophila melanogaster. 
+If you look at the metadata in hub, you can see that the 5th record 
+represents a GRanges object from UCSC RefSeq Gene track.
+
+```{r}
+length(hub)
+head(names(hub))
+head(hub$title, n=10)
+## then look at a specific slice of the hub object.
+hub[5]
+```
+So you can retrieve that dm3 file as a GRanges like this:
+
+```{r}
+gr <- hub[[names(hub)[5]]]
+summary(gr)
+```
+
+The metadata fields contain the details of file origin and content.
+
+```{r}
+metadata(gr)
+```
+Split the `GRanges` object by gene name to get a `GRangesList` object of 
+transcript ranges grouped by gene.
+
+```{r}
+txbygn <- split(gr, gr$name)
+```
+
+You can now use `txbygn` with the `summarizeOverlaps` function
+to prepare a table of read counts for RNA-Seq differential gene expression.
+
+# Further reading
+
+Note that before passing `txbygn` to `summarizeOverlaps`,
+you should confirm that the seqlevels (chromosome names) in it match those
+in the BAM file. See `?renameSeqlevels`, `?keepSeqlevels`
+and `?seqlevels` for examples of renaming seqlevels.
+
+# Session info
+
+<details>
+<summary><b>
+Click to display session info
+</b></summary>
+```{r}
+sessionInfo()
+```
+</details>

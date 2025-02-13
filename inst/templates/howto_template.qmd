@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 knitr:
-    opts_chunk: 
+    opts_chunk:
         collapse: true
         comment: '#>'
 format:
@@ -28,16 +28,20 @@ EDIT:Short introduction
 
 # Bioconductor packages used in this document
 
-EDIT:Add list of packages used in the HowTo. Use `r Biocpkg("PkgName")` to 
-refer to Bioconductor packages, and similarly for other package sources 
+EDIT:Add list of packages used in the HowTo. Use `r Biocpkg("PkgName")` to
+refer to Bioconductor packages, and similarly for other package sources
 (see https://bioconductor.org/packages/release/bioc/vignettes/BiocStyle/inst/doc/AuthoringRmdVignettes.html#4_Style_macros). Example:
 * `r Biocpkg("pasillaBamSubset")`
 
 # EDIT:Main section
 
-EDIT:Here, put the code and explanations for your HowTo. Keep in mind that 
-HowTos should be short, and address a well-defined, specific task using 
-Bioconductor. 
+EDIT:Here, put the code and explanations for your HowTo. Keep in mind that
+HowTos should be short, and address a well-defined, specific task using
+Bioconductor.
+
+# Further reading
+
+EDIT: add a (short) list of useful resources about.
 
 # Session info
 
@@ -49,4 +53,3 @@ Click to display session info
 sessionInfo()
 ```
 </details>
-

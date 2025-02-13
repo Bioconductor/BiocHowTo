@@ -1,7 +1,8 @@
 # BiocHowTo
 
-This repository contains short, stand-alone "How To" documents related to 
-Bioconductor. 
+This repository contains stand-alone "How To" documents related to 
+Bioconductor. A HowTo should be short, and focus on how to solve a 
+well-defined question using one or more Bioconductor packages. 
 
 ## How to contribute
 
@@ -14,19 +15,24 @@ the content. Note that the title of the vignette should be added both to the
 3. Test the vignette locally in a fresh R session, to make sure that it is 
 self-contained and runs without errors.
 4. Add your name to the `Author` list in the `DESCRIPTION` file.
-5. Add any new package that you are using to the list of dependencies of the 
-package, e.g. using
+5. If your HowTo is using packages that are not already included among the 
+dependencies of `BiocHowTo`, please add them to the list of `Imports` in the 
+`DESCRIPTION` file. One way to do this is via the `usethis` package:
 
 ```
-usethis::use_package("new_dependency")
+usethis::use_package("name_of_new_dependency")
 ```
 
 6. Add the new vignette to a suitable section under 'Articles' in the 
 `_pkgdown.yml` file.
 7. Push the changes to your forked repository and open a pull request to 
 the `devel` branch of the parent repository.
+8. All submissions will be reviewed by the Bioconductor Training Committee. 
+
 
 ## How to suggest a new topic
 
 To suggest a new topic for a HowTo, open an issue and provide some more
-details of your suggestion. 
+details of your suggestion. If you would like to take on one of the open 
+issues, either assign yourself (if possible), or comment in the issue, and 
+one of the administrators can assign you. 

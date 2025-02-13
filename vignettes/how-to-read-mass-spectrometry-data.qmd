@@ -1,0 +1,82 @@
+---
+title: How to read mass spectrometry data
+author: Laurent Gatto
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{How to read mass spectrometry data}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+    opts_chunk:
+        collapse: true
+        comment: '#>'
+format:
+    html:
+        toc: true
+        html-math-method: mathjax
+---
+
+```{r}
+#| echo: false
+
+suppressPackageStartupMessages({
+    library(BiocStyle)
+})
+```
+
+# Bioconductor packages used in this document
+
+* `r Biocpkg("Spectra")`
+* `r Biocpkg("mzR")`
+* `r Biocpkg("MsDataHub")`
+
+# How to read mass spectrometry data
+
+Let's first get some example raw mass spectrometry data from the
+*MsDataHub* package. Below, we download two _sciex_ mzML files
+represent profile-mode LC-MS data of pooled human serum samples and
+create a vector of files names `fls`:
+
+```{r}
+library(MsDataHub)
+fls <- c(X20171016_POOL_POS_1_105.134.mzML(),
+         X20171016_POOL_POS_3_105.134.mzML())
+fls
+```
+
+We can now use the `Spectra()` constructor function to create an
+object of class `Spectra` that contains the raw data. Note that the
+`mzR` package is needed to read the content of the mzML files.
+
+
+```{r}
+suppressPackageStartupMessages({
+    library("Spectra")
+    library("mzR")
+})
+```
+
+```{r}
+sp <- Spectra(fls)
+sp
+```
+
+The object contains `r length(sp)` spectra from both files.
+
+# Further reading
+
+- The [R for Mass Spectrometry](https://rformassspectrometry.github.io/book/) book.
+- The [Large-scale data handling and processing with
+  Spectra](https://rformassspectrometry.github.io/Spectra/articles/Spectra-large-scale.html)
+  vignette from the *Spectra* package.
+
+# Session info
+
+<details>
+<summary><b>
+Click to display session info
+</b></summary>
+```{r}
+sessionInfo()
+```
+</details>
