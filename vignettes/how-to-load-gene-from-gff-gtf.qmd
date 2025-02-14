@@ -26,7 +26,7 @@ suppressPackageStartupMessages({
 
 A **gene model** is essentially a set of annotations that
 describes the genomic locations of the known genes, transcripts, exons, and CDS, for
-a given organism. The a standardized file format to hold gene models is a **[GFF or GTF](https://useast.ensembl.org/info/website/upload/gff.html)**. In Bioconductor, gene model information is typically represented as a TxDb object but also sometimes as a GRanges or GRangesList object. We can use the `makeTxDbFromGFF()` function from the *[txdbmaker](https://bioconductor.org/packages/release/bioc/html/txdbmaker.html)* package to import a GFF or GTF file as a *TxDb* object.
+a given organism. The standardized file format to hold gene models is a **[GFF or GTF](https://useast.ensembl.org/info/website/upload/gff.html)**. In Bioconductor, gene model information is typically represented as a TxDb object but also sometimes as a GRanges or GRangesList object. We can use the `makeTxDbFromGFF()` function from the `r Biocpkg("txdbmaker")` package to import a GFF or GTF file as a *TxDb* object.
 
 
 # Bioconductor packages used in this document
@@ -35,7 +35,7 @@ a given organism. The a standardized file format to hold gene models is a **[GFF
 
 # How to load a gene model from a GFF or GTF file
 
-We will use a small .gff3 file provided by the *[txdbmaker](https://bioconductor.org/packages/release/bioc/html/txdbmaker.html)* package.
+We will use a small .gff3 file provided by the `r Biocpkg("txdbmaker")` package.
 
 ```{r, warning=FALSE, message=FALSE}
 suppressPackageStartupMessages({
@@ -50,7 +50,7 @@ suppressPackageStartupMessages({
 ```
 
 
-See `?makeTxDbFromGFF` in the *[txdbmaker](https://bioconductor.org/packages/release/bioc/html/txdbmaker.html)* package for more information.
+See `?makeTxDbFromGFF` in the `r Biocpkg("txdbmaker")` package for more information.
 
 Extract the exon coordinates grouped by gene from this gene model:
 
