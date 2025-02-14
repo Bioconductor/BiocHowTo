@@ -65,7 +65,7 @@ Imports:
     BiocStyle,
     GenomicAlignments,
     pasillaBamSubset,
-    txdbmaker
+    txdbmaker,
     mzR,
     MsDataHub,
     Spectra,
