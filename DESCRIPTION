@@ -43,7 +43,7 @@ Authors@R: c(
     person(
         "Pedro", "Baldoni",
         role = "aut"
-    )
+    ),
     person(
         "Jenny", "Drnevich",
         role = "aut"
