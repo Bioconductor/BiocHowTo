@@ -8,7 +8,7 @@ articles:
   - how-to-read-single-end-reads-from-bam-file
   - how-to-read-paired-end-reads-from-bam-file
   - how-to-read-big-bam-file-in-chunks
-
+  
 - title: Mass spectrometry
   contents:
   - how-to-read-mass-spectrometry-data
@@ -16,3 +16,4 @@ articles:
 - title: Accessing genomic annotation data
   contents:
   - how-to-retrieve-gene-model-from-annotationhub
+  - how-to-load-gene-from-gff-gtf

@@ -43,6 +43,10 @@ Authors@R: c(
     person(
         "Pedro", "Baldoni",
         role = "aut"
+    ),
+    person(
+        "Jenny", "Drnevich",
+        role = "aut"
     )
   )
 Description: This package provides a crowd-sourced collection of 'How To'
@@ -61,6 +65,7 @@ Imports:
     BiocStyle,
     GenomicAlignments,
     pasillaBamSubset,
+    txdbmaker,
     mzR,
     MsDataHub,
     Spectra,
