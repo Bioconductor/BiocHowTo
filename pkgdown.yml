@@ -1,6 +1,6 @@
 pandoc: 3.1.11
 pkgdown: 2.1.1.9000
-pkgdown_sha: 18cca452d736fea33d47b19b4ef4973db9104a75
+pkgdown_sha: 7cf401f44a970ea13744fcdd883248552c68ff9d
 articles:
   how-to-load-gene-from-gff-gtf: how-to-load-gene-from-gff-gtf.html
   how-to-read-big-bam-file-in-chunks: how-to-read-big-bam-file-in-chunks.html
@@ -8,7 +8,7 @@ articles:
   how-to-read-paired-end-reads-from-bam-file: how-to-read-paired-end-reads-from-bam-file.html
   how-to-read-single-end-reads-from-bam-file: how-to-read-single-end-reads-from-bam-file.html
   how-to-retrieve-gene-model-from-annotationhub: how-to-retrieve-gene-model-from-annotationhub.html
-last_built: 2025-02-17T15:47Z
+last_built: 2025-03-10T15:00Z
 urls:
   reference: https://csoneson.github.io/BiocHowTo/reference
   article: https://csoneson.github.io/BiocHowTo/articles
