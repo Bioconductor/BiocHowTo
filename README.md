@@ -6,7 +6,7 @@ well-defined question using one or more Bioconductor packages.
 
 ## How to contribute
 
-1. Fork this repository and create a new branch. 
+1. [Fork this repository](https://github.com/Bioconductor/BiocHowTo/fork) and create a new branch. 
 2. Copy and rename the `howto_template.qmd` file from `inst/templates` to 
 the `vignettes` directory, and edit the copy accordingly. Please choose the 
 name for the new vignette in such a way that it is unique and clearly indicates 
