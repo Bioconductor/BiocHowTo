@@ -48,8 +48,8 @@ endosome-to-lysosome trafficking of membrane cargo. The Entrez gene id is
 trak2 <- "66008"
 ```
 
-The TxDb.Hsapiens.UCSC.hg38.knownGene data package contains the gene models 
-corresponding to the UCSC 'Known Genes' track.
+The `r Biocpkg("TxDb.Hsapiens.UCSC.hg38.knownGene")` data package contains the 
+gene models corresponding to the UCSC 'Known Genes' track.
 
 ```{r}
 suppressPackageStartupMessages({
