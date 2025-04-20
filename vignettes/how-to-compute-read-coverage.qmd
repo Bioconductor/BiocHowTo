@@ -1,0 +1,116 @@
+---
+title: How to compute read coverage
+author: Bioconductor Core Team
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{How to compute read coverage}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+    opts_chunk:
+        collapse: true
+        comment: '#>'
+format:
+    html:
+        toc: true
+        html-math-method: mathjax
+---
+
+```{r}
+#| echo: false
+
+suppressPackageStartupMessages({
+    library(BiocStyle)
+})
+```
+
+This HowTo has been adapted from the list of HowTos provided in the 
+[vignette](https://bioconductor.org/packages/release/bioc/vignettes/GenomicRanges/inst/doc/GenomicRangesHOWTOs.pdf)
+for the `r Biocpkg("GenomicRanges")` Bioconductor package. 
+
+# Bioconductor packages used in this document
+
+* `r Biocpkg("pasillaBamSubset")`
+* `r Biocpkg("GenomicAlignments")`
+
+# How to compute read coverage
+
+By "read coverage", we mean the number of reads that cover a given genomic position. 
+Computing the read coverage generally consists in computing the coverage at 
+each position in the genome.
+This can be done with the `coverage` function from `r Biocpkg("GenomicAlignments")`.
+For illustration, we use data from the `r Biocpkg("pasillaBamSubset")` data 
+package.
+
+```{r}
+suppressPackageStartupMessages({
+    library(pasillaBamSubset)
+})
+# Path to a bam file with single-end reads
+(un1 <- untreated1_chr4())
+```
+
+Single-end reads can be read with the `readGAlignments` function from 
+`r Biocpkg("GenomicAlignments")`.
+
+```{r}
+suppressPackageStartupMessages({
+    library(GenomicAlignments)
+})
+(reads <- readGAlignments(un1))
+```
+
+The coverage can then be calculated using the `coverage` function from 
+`r Biocpkg("GenomicAlignments")`: 
+
+```{r}
+(cvg <- coverage(reads))
+```
+
+We can extract the coverage on a specific chromosome: 
+
+```{r}
+cvg$chr4
+```
+
+We can also perform calculations on the returned object, e.g. to get the 
+average and maximum coverage on chromosome 4:
+
+```{r}
+mean(cvg$chr4)
+max(cvg$chr4)
+```
+
+We can use the `slice` function to find the genomic regions where the coverage
+is greater or equal to a given threshold.
+
+```{r}
+(chr4_highcov <- slice(cvg$chr4, lower = 500))
+```
+
+The *weight* of a given such region can be defined as the number of aligned 
+nucleotides that belong to the region (i.e. the area under the coverage curve). 
+It can be obtained with `sum`:
+
+```{r}
+sum(chr4_highcov)
+```
+
+Note that `coverage` and `slice` are generic functions with methods for 
+different types of objects. See `?coverage` or `?slice` for more information.
+
+
+# Further reading
+
+- The `r Biocpkg("GenomicAlignments")` vignette.
+
+# Session info
+
+<details>
+<summary><b>
+Click to display session info
+</b></summary>
+```{r}
+sessionInfo()
+```
+</details>
