@@ -50,7 +50,7 @@
       <h1>How to retrieve a gene model from AnnotationHub</h1>
 
       <p class="author">Bioconductor Core Team</p>
-      <p class="date">2025-03-10</p>
+      <p class="date">2025-04-20</p>
 
 
       <div class="d-none name"><code></code></div>
@@ -61,15 +61,15 @@
 
 
 
-    <p>This HowTo has been adapted from the list of HowTos provided in the <a href="https://bioconductor.org/packages/release/bioc/vignettes/GenomicRanges/inst/doc/GenomicRangesHOWTOs.pdf" class="external-link">vignette</a> for the <em><a href="https://bioconductor.org/packages/3.21/GenomicRanges" class="external-link">GenomicRanges</a></em> Bioconductor package.</p>
+    <p>This HowTo has been adapted from the list of HowTos provided in the <a href="https://bioconductor.org/packages/release/bioc/vignettes/GenomicRanges/inst/doc/GenomicRangesHOWTOs.pdf" class="external-link">vignette</a> for the <em><a href="https://bioconductor.org/packages/3.22/GenomicRanges" class="external-link">GenomicRanges</a></em> Bioconductor package.</p>
 <section class="section level2"><h2 id="bioconductor-packages-used-in-this-document">Bioconductor packages used in this document<a class="anchor" aria-label="anchor" href="#bioconductor-packages-used-in-this-document"></a>
 </h2>
 <ul>
-<li><em><a href="https://bioconductor.org/packages/3.21/AnnotationHub" class="external-link">AnnotationHub</a></em></li>
+<li><em><a href="https://bioconductor.org/packages/3.22/AnnotationHub" class="external-link">AnnotationHub</a></em></li>
 </ul></section><section class="section level2"><h2 id="how-to-retrieve-a-gene-model-from-annotationhub">How to retrieve a gene model from <em>AnnotationHub</em>
 <a class="anchor" aria-label="anchor" href="#how-to-retrieve-a-gene-model-from-annotationhub"></a>
 </h2>
-<p>When a gene model is not available as a <code>GRanges</code> or <code>GRangesList</code> object or as a data package, it may be available on <em><a href="https://bioconductor.org/packages/3.21/AnnotationHub" class="external-link">AnnotationHub</a></em>. In this <em>HOWTO</em>, will look for a gene model for Drosophila melanogaster on <em><a href="https://bioconductor.org/packages/3.21/AnnotationHub" class="external-link">AnnotationHub</a></em>. Create a `hub’ and then filter on Drosophila melanogaster:</p>
+<p>When a gene model is not available as a <code>GRanges</code> or <code>GRangesList</code> object or as a data package, it may be available on <em><a href="https://bioconductor.org/packages/3.22/AnnotationHub" class="external-link">AnnotationHub</a></em>. In this <em>HOWTO</em>, will look for a gene model for Drosophila melanogaster on <em><a href="https://bioconductor.org/packages/3.22/AnnotationHub" class="external-link">AnnotationHub</a></em>. Create a `hub’ and then filter on Drosophila melanogaster:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="op">{</span></span>
@@ -79,11 +79,11 @@
 <span><span class="va">hub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/AnnotationHub/man/AnnotationHub-class.html" class="external-link">AnnotationHub</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">hub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">hub</span>, <span class="va">hub</span><span class="op">$</span><span class="va">species</span><span class="op">==</span><span class="st">'Drosophila melanogaster'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>There are 471 files that match Drosophila melanogaster. If you look at the metadata in hub, you can see that the 5th record represents a GRanges object from UCSC RefSeq Gene track.</p>
+<p>There are 457 files that match Drosophila melanogaster. If you look at the metadata in hub, you can see that the 5th record represents a GRanges object from UCSC RefSeq Gene track.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">hub</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 471</span></span>
+<span><span class="co">#&gt; [1] 457</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">hub</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "AH6789" "AH6790" "AH6791" "AH6792" "AH6793" "AH6794"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">hub</span><span class="op">$</span><span class="va">title</span>, n<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
@@ -93,7 +93,7 @@
 <span><span class="co">## then look at a specific slice of the hub object.</span></span>
 <span><span class="va">hub</span><span class="op">[</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="co">#&gt; AnnotationHub with 1 record</span></span>
-<span><span class="co">#&gt; # snapshotDate(): 2025-03-03</span></span>
+<span><span class="co">#&gt; # snapshotDate(): 2025-04-08</span></span>
 <span><span class="co">#&gt; # names(): AH6793</span></span>
 <span><span class="co">#&gt; # $dataprovider: UCSC</span></span>
 <span><span class="co">#&gt; # $species: Drosophila melanogaster</span></span>
@@ -156,9 +156,9 @@
 </summary><div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R Under development (unstable) (2025-03-08 r87910)</span></span>
+<span><span class="co">#&gt; R version 4.5.0 (2025-04-11)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sonoma 14.7.2</span></span>
+<span><span class="co">#&gt; Running under: macOS Sonoma 14.7.4</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
@@ -176,26 +176,26 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt;  [1] GenomicRanges_1.59.1 GenomeInfoDb_1.43.4  IRanges_2.41.3      </span></span>
-<span><span class="co">#&gt;  [4] S4Vectors_0.45.4     AnnotationHub_3.15.0 BiocFileCache_2.15.1</span></span>
+<span><span class="co">#&gt;  [4] S4Vectors_0.45.4     AnnotationHub_3.17.0 BiocFileCache_2.15.1</span></span>
 <span><span class="co">#&gt;  [7] dbplyr_2.5.0         BiocGenerics_0.53.6  generics_0.1.3      </span></span>
-<span><span class="co">#&gt; [10] BiocStyle_2.35.0    </span></span>
+<span><span class="co">#&gt; [10] BiocStyle_2.37.0    </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] rappdirs_0.3.3          BiocVersion_3.21.1      RSQLite_2.3.9          </span></span>
 <span><span class="co">#&gt;  [4] digest_0.6.37           magrittr_2.0.3          evaluate_1.0.3         </span></span>
-<span><span class="co">#&gt;  [7] fastmap_1.2.0           blob_1.2.4              jsonlite_1.9.1         </span></span>
-<span><span class="co">#&gt; [10] AnnotationDbi_1.69.0    DBI_1.2.3               BiocManager_1.30.25    </span></span>
+<span><span class="co">#&gt;  [7] fastmap_1.2.0           blob_1.2.4              jsonlite_2.0.0         </span></span>
+<span><span class="co">#&gt; [10] AnnotationDbi_1.69.1    DBI_1.2.3               BiocManager_1.30.25    </span></span>
 <span><span class="co">#&gt; [13] httr_1.4.7              purrr_1.0.4             UCSC.utils_1.3.1       </span></span>
-<span><span class="co">#&gt; [16] Biostrings_2.75.3       cli_3.6.4               rlang_1.1.5            </span></span>
+<span><span class="co">#&gt; [16] Biostrings_2.75.4       cli_3.6.4               rlang_1.1.6            </span></span>
 <span><span class="co">#&gt; [19] crayon_1.5.3            XVector_0.47.2          Biobase_2.67.0         </span></span>
 <span><span class="co">#&gt; [22] bit64_4.6.0-1           withr_3.0.2             cachem_1.1.0           </span></span>
 <span><span class="co">#&gt; [25] yaml_2.3.10             tools_4.5.0             memoise_2.0.1          </span></span>
-<span><span class="co">#&gt; [28] dplyr_1.1.4             GenomeInfoDbData_1.2.13 filelock_1.0.3         </span></span>
-<span><span class="co">#&gt; [31] curl_6.2.1              mime_0.12               vctrs_0.6.5            </span></span>
+<span><span class="co">#&gt; [28] dplyr_1.1.4             GenomeInfoDbData_1.2.14 filelock_1.0.3         </span></span>
+<span><span class="co">#&gt; [31] curl_6.2.2              mime_0.13               vctrs_0.6.5            </span></span>
 <span><span class="co">#&gt; [34] R6_2.6.1                png_0.1-8               lifecycle_1.0.4        </span></span>
-<span><span class="co">#&gt; [37] KEGGREST_1.47.0         bit_4.5.0.1             pkgconfig_2.0.3        </span></span>
-<span><span class="co">#&gt; [40] pillar_1.10.1           glue_1.8.0              xfun_0.51              </span></span>
-<span><span class="co">#&gt; [43] tibble_3.2.1            tidyselect_1.2.1        knitr_1.49             </span></span>
+<span><span class="co">#&gt; [37] KEGGREST_1.47.1         bit_4.6.0               pkgconfig_2.0.3        </span></span>
+<span><span class="co">#&gt; [40] pillar_1.10.2           glue_1.8.0              xfun_0.52              </span></span>
+<span><span class="co">#&gt; [43] tibble_3.2.1            tidyselect_1.2.1        knitr_1.50             </span></span>
 <span><span class="co">#&gt; [46] htmltools_0.5.8.1       rmarkdown_2.29          compiler_4.5.0</span></span></code></pre></div>
 </div>
 </details></section><script id="quarto-html-after-body" type="application/javascript">
