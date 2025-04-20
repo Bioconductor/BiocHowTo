@@ -1,0 +1,146 @@
+---
+title: How to get the exon and intron sequences of a given gene
+author: Bioconductor Core Team
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{How to get the exon and intron sequences of a given gene}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+    opts_chunk:
+        collapse: true
+        comment: '#>'
+format:
+    html:
+        toc: true
+        html-math-method: mathjax
+---
+
+```{r}
+#| echo: false
+
+suppressPackageStartupMessages({
+    library(BiocStyle)
+})
+```
+
+This HowTo has been adapted from the list of HowTos provided in the 
+[vignette](https://bioconductor.org/packages/release/bioc/vignettes/GenomicRanges/inst/doc/GenomicRangesHOWTOs.pdf)
+for the `r Biocpkg("GenomicRanges")` Bioconductor package. 
+
+# Bioconductor packages used in this document
+
+* `r Biocpkg("TxDb.Hsapiens.UCSC.hg38.knownGene")`
+* `r Biocpkg("BSgenome.Hsapiens.UCSC.hg38")`
+* `r Biocpkg("GenomicFeatures")`
+* `r Biocpkg("Biostrings")`
+
+# How to get the exon and intron sequences of a given gene
+
+The exon and intron sequences of a gene are essentially the DNA sequences of 
+the introns and exons of all known transcripts of the gene. The first task, 
+therefore, is to identify all transcripts associated with the gene of interest. 
+Our example gene is the human `TRAK2`, which is involved in regulation of 
+endosome-to-lysosome trafficking of membrane cargo. The Entrez gene id is
+'66008'.
+
+```{r}
+trak2 <- "66008"
+```
+
+The TxDb.Hsapiens.UCSC.hg38.knownGene data package contains the gene models 
+corresponding to the UCSC 'Known Genes' track.
+
+```{r}
+suppressPackageStartupMessages({
+    library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+})
+txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
+```
+
+The transcript ranges for all the genes in the gene model can be extracted with 
+the `transcriptsBy` function from the `r Biocpkg("GenomicFeatures")` package. 
+They will be returned in a named `GRangesList` object containing all the 
+transcripts grouped by gene. In order to keep only the transcripts of the 
+`TRAK2` gene we will subset the `GRangesList` object using the `[[` operator.
+
+```{r}
+suppressPackageStartupMessages({
+    library(GenomicFeatures)
+})
+(trak2_txs <- transcriptsBy(txdb, by = "gene")[[trak2]])
+```
+
+`trak2_txs` is a `GRanges` object with one range per transcript in the `TRAK2` 
+gene. The transcript names are stored in the `tx_name` metadata column. We will 
+need them to subset the extracted intron and exon regions:
+
+```{r}
+(trak2_tx_names <- mcols(trak2_txs)$tx_name)
+```
+
+The exon and intron genomic ranges for all the transcripts in the gene model 
+can be extracted with the `exonsBy` and `intronsByTranscript` functions, 
+respectively. Both functions return a `GRangesList` object. Then we keep only 
+the exon and intron for the transcripts of the `TRAK2` gene by subsetting 
+each `GRangesList` object by the `TRAK2` transcript names.
+
+Extract the exon regions:
+
+```{r}
+trak2_exbytx <- exonsBy(txdb, "tx", use.names = TRUE)[trak2_tx_names]
+elementNROWS(trak2_exbytx)
+```
+
+... and the intron regions:
+
+```{r}
+trak2_inbytx <- intronsByTranscript(txdb, use.names = TRUE)[trak2_tx_names]
+elementNROWS(trak2_inbytx)
+```
+
+Next we want the DNA sequences for these exons and introns. The `getSeq` 
+function from the `r Biocpkg("Biostrings")` package can be used to query a 
+`BSgenome` object with a set of genomic ranges and retrieve the corresponding 
+DNA sequences.
+
+```{r}
+suppressPackageStartupMessages({
+    library(BSgenome.Hsapiens.UCSC.hg38)
+})
+```
+
+Extract the exon sequences:
+
+```{r}
+(trak2_ex_seqs <- getSeq(Hsapiens, trak2_exbytx))
+```
+
+... and the intron sequences:
+
+```{r}
+(trak2_in_seqs <- getSeq(Hsapiens, trak2_inbytx))
+```
+
+Each list element is a `DNAStringSet` object, e.g.:
+
+```{r}
+trak2_in_seqs[[1]]
+```
+
+Each sequence here corresponds to a single intron.
+
+# Further reading
+
+- The `r Biocpkg("GenomicFeatures")` vignette.
+
+# Session info
+
+<details>
+<summary><b>
+Click to display session info
+</b></summary>
+```{r}
+sessionInfo()
+```
+</details>
