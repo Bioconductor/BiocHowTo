@@ -73,4 +73,5 @@ Imports:
     TxDb.Hsapiens.UCSC.hg38.knownGene,
     BSgenome.Hsapiens.UCSC.hg38,
     GenomicFeatures,
-    Biostrings
+    Biostrings,
+    Rsamtools
