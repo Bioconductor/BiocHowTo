@@ -26,8 +26,12 @@ suppressPackageStartupMessages({
 
 A **gene model** is essentially a set of annotations that
 describes the genomic locations of the known genes, transcripts, exons, and CDS, for
-a given organism. The standardized file format to hold gene models is a **[GFF or GTF](https://useast.ensembl.org/info/website/upload/gff.html)**. In Bioconductor, gene model information is typically represented as a TxDb object but also sometimes as a GRanges or GRangesList object. We can use the `makeTxDbFromGFF()` function from the `r Biocpkg("txdbmaker")` package to import a GFF or GTF file as a *TxDb* object.
-
+a given organism. The standardized file format to hold gene models is a 
+**[GFF or GTF](https://useast.ensembl.org/info/website/upload/gff.html)**. 
+In Bioconductor, gene model information is typically represented as a TxDb 
+object but also sometimes as a GRanges or GRangesList object. We can use the
+`makeTxDbFromGFF()` function from the `r Biocpkg("txdbmaker")` package to 
+import a GFF or GTF file as a *TxDb* object.
 
 # Bioconductor packages used in this document
 
@@ -46,7 +50,6 @@ suppressPackageStartupMessages({
  
  txdb <- makeTxDbFromGFF(gff_file, format="gff3")
  txdb
-
 ```
 
 
@@ -55,12 +58,8 @@ See `?makeTxDbFromGFF` in the `r Biocpkg("txdbmaker")` package for more informat
 Extract the exon coordinates grouped by gene from this gene model:
 
 ```{r}
-
- exonsBy(txdb, by="gene")
-
-
+exonsBy(txdb, by="gene")
 ```
-
 
 # Session info
 
