@@ -2,6 +2,12 @@ url: https://bioconductor.github.io/BiocHowTo/
 template:
   bootstrap: 5
 
+navbar:
+  structure:
+    left:
+      - home
+      - articles
+
 articles:
 - title: Interacting with BAM files
   contents:
