@@ -47,6 +47,10 @@ Authors@R: c(
     person(
         "Jenny", "Drnevich",
         role = "aut"
+    ),
+    person(
+        "Robert", "Castelo",
+        role = "aut"
     )
   )
 Description: This package provides a crowd-sourced collection of 'How To'
@@ -74,4 +78,6 @@ Imports:
     BSgenome.Hsapiens.UCSC.hg38,
     GenomicFeatures,
     Biostrings,
-    Rsamtools
+    Rsamtools,
+    GSEABase,
+    GSVA

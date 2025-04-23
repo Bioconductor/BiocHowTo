@@ -19,3 +19,4 @@ articles:
   - how-to-retrieve-gene-model-from-annotationhub
   - how-to-load-gene-from-gff-gtf
   - how-to-get-exon-intron-sequence-for-gene
+  - how-to-read-gene-sets-from-gmt-files
