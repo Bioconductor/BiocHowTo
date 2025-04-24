@@ -1,0 +1,133 @@
+---
+title: How to read gene sets from GMT files
+author: Robert Castelo
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{How to read gene sets from GMT files}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+    opts_chunk:
+        collapse: true
+        comment: '#>'
+format:
+    html:
+        toc: true
+        html-math-method: mathjax
+---
+
+```{r}
+#| echo: false
+
+suppressPackageStartupMessages({
+    library(BiocStyle)
+})
+```
+
+A **gene set** is simple yet useful way to define pathways without regard
+to the specific molecular interactions. It can also represent the signature
+of a characteristic pattern of gene expression associated with a cell type
+or a disease for diagnostic or prognostic purposes. An important source of
+gene sets is the
+[Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb),
+which stores them as plain text files following the so-called
+[_gene matrix transposed_ (GMT) format](https://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29).
+In the GMT format, each line stores a gene set with the following values
+separated by tabs:
+
+  * A unique gene set identifier.
+  * A gene set description.
+  * One or more gene identifiers.
+
+Because each different gene set may consist of a different number of genes, each
+line in a GMT file may contain a different number of tab-separated values. This
+means that the GMT format is not a tabular format, and therefore cannot be directly
+read with base R functions such as `read.table()` or `read.csv()`.
+
+# Bioconductor packages used in this document
+
+* `r Biocpkg("GSEABase")`
+* `r Biocpkg("GSVA")`
+
+# How to read gene sets from GMT files
+
+The package `r Biocpkg("GSEABase")` provides object classes and methods to represent
+and manipulate gene sets, including reading GMT files with the function `getGmt()`.
+Here is a first example in which we read a GMT file from the MSigDB database:
+
+```{r, message=FALSE}
+library(GSEABase)
+
+URL <- paste("https://data.broadinstitute.org/gsea-msigdb/msigdb/release",
+             "2023.2.Hs/c7.immunesigdb.v2023.2.Hs.symbols.gmt", sep="/")
+genesets <- getGmt(URL, geneIdType=SymbolIdentifier())
+genesets
+length(genesets)
+```
+Next to the filename of the GMT file, we provided the argument
+`geneIdType=SymbolIdentifier()`. This argument adds the necessary metadata that
+later on allows other software to figure out what kind of gene identifiers are
+used in this collection of gene sets, to attempt mapping them to other type of
+identifiers, if necessary. While this argument is optional, we should always
+try to provide it.
+
+The output of the `getGmt()` function is a `GeneSetCollection` object, which
+pretty much behaves like a list object and many Bioconductor packages analysing
+gene sets may expect that kind of object as input. However, we can coerce it to
+a regular `list` object with the function `geneIds()`:
+
+```{r}
+genesets.list <- geneIds(genesets)
+head(lapply(genesets.list, head, 3), 3)
+```
+By definition, GMT files should have unique gene set identifiers and if we
+attempt to read with `getGmt()` a malformed GMT file with duplicated
+identifiers it will prompt an error:
+
+```{r, error=TRUE}
+URL <- paste("https://data.broadinstitute.org/gsea-msigdb/msigdb/release",
+             "7.5/c2.all.v7.5.symbols.gmt", sep="/")
+genesets <- getGmt(URL, geneIdType=SymbolIdentifier())
+```
+So if we still want to read the contents of that GMT file, we would have to
+download it and edit the lines with duplicated identifiers. An alternative is
+to use the function `readGMT()` of the `r Biocpkg("GSVA")` package:
+
+```{r, message=FALSE}
+library(GSVA)
+
+genesets <- readGMT(URL)
+genesets
+```
+As we may see, it has detected the presence duplicated gene set identifiers and
+applied a deduplication policy, which can be changed through the parameter
+`dedupUse`; see its help page with `?readGMT` for further deduplication
+policies. As `getGmt()`, it also takes a parameter `geneIdType`, but by default
+it will automatically detect the type of gene identifier and fill in the
+corresponding metadata in the resulting `GeneSetCollection` object, so that in
+principle we need not to specify it.
+
+# Further reading
+
+- The [Introduction to GSEABase](https://bioconductor.org/packages/release/bioc/vignettes/GSEABase/inst/doc/GSEABase.html)
+  vignette from the `r Biocpkg("GSEABase")` package.
+- The help pages of the `getGmt()` and `readGMT()` functions in the
+  `r Biocpkg("GSEABase")` and `r Biocpkg("GSVA")` packages, respectively.
+- The Bioconductor package `r Biocpkg("msigdb")` provides an API for
+  directly querying and downloading MSigDB GMT files as `GeneSetCollection`
+  objects.
+- Similarly to `r Biocpkg("msigdb")`, the `r CRANpkg("msigdbr")` CRAN
+  package provides an API to query and download MSigDB GMT files, but as
+  [tidy](https://r4ds.hadley.nz/data-tidy.html) `data.frame` objects
+  with one gene per row.
+
+# Session info
+
+<details>
+<summary><b>
+Click to display session info
+</b></summary>
+```{r}
+sessionInfo()
+```
+</details>

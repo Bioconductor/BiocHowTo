@@ -49,6 +49,10 @@ Authors@R: c(
         role = "aut"
     ),
     person(
+        "Robert", "Castelo",
+        role = "aut"
+    ),
+    person(
         "Michael", "Stadler",
         role = "aut"
     )
@@ -73,6 +77,8 @@ Imports:
     mzR,
     MsDataHub,
     Spectra,
-    AnnotationHub
+    AnnotationHub,
+    GSEABase,
+    GSVA
 URL: https://github.com/bioconductor/BiocHowTo, 
     https://bioconductor.github.io/BiocHowTo/
