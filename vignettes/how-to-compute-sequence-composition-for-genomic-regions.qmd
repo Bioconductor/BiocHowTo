@@ -1,0 +1,183 @@
+---
+title: How to compute sequence composition for genomic regions
+author: Michael Stadler
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{How to compute sequence composition for genomic regions}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+    opts_chunk:
+        collapse: true
+        comment: '#>'
+format:
+    html:
+        toc: true
+        html-math-method: mathjax
+        embed-resources: true
+---
+
+```{r}
+#| echo: false
+
+suppressPackageStartupMessages({
+    library(BiocStyle)
+})
+```
+
+This HowTo shows how to fetch sequences for given regions from a reference and
+compute composition features for them.
+
+# Bioconductor packages used in this document
+
+* `r Biocpkg("TxDb.Hsapiens.UCSC.hg38.knownGene")`
+* `r Biocpkg("BSgenome.Hsapiens.UCSC.hg38")`
+* `r Biocpkg("GenomicFeatures")`
+* `r Biocpkg("Biostrings")`
+
+# How to compute sequence composition for genomic regions
+
+Mammalian genomes contain regulatory regions with a high content of CpG 
+dinucleotides, so called *CpG islands*, a side effect indirectly caused by
+the methylation of cytosines in CpG contexts. Many transcripts contain
+a CpG island in their promoter region, near the start of the transcript.
+In this HowTo, we will identify such transcripts by analyzing the CpG
+composition of promoter sequences.
+
+We first obtain the coordinates of promoter regions from the
+`r Biocpkg("TxDb.Hsapiens.UCSC.hg38.knownGene")` package, using the
+`promoters` function from the `r Biocpkg("GenomicFeatures")` package:
+
+```{r}
+suppressPackageStartupMessages({
+    library(GenomicFeatures)
+    library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+})
+txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
+prom <- promoters(txdb, upstream = 1000, downstream = 1000)
+prom
+```
+
+Here, promoter regions are defined as 2000 base pair regions centered on
+transcript start sites (the 5'-end of a transcript). The warning message above
+is caused by start sites that are near the boundary of a chromosome, such that
+the promoter region will extend beyond its beginning or end. By calling `trim`
+on the `GRanges` object, all regions are truncated to the limits of the
+chromosomes, resulting in a few promoters shorter than 2000 base pairs:
+
+```{r}
+summary(width(prom) == 2000)
+prom <- trim(prom)
+summary(width(prom) == 2000)
+```
+
+It may be useful to now subset the extracted promoters, for example to only
+retain promoters on autosomes, or only a single promoter per gene.
+Here, we will remove redundant promoters resulting from transcripts with
+identical start sites:
+
+```{r}
+summary(duplicated(prom))
+prom <- prom[!duplicated(prom)]
+```
+
+Next, we extract the sequences of the promoters from the reference genome
+assembly in the `r Biocpkg("BSgenome.Hsapiens.UCSC.hg38")` package:
+
+```{r}
+suppressPackageStartupMessages({
+    library(Biostrings)
+    library(BSgenome.Hsapiens.UCSC.hg38)
+})
+promseq <- getSeq(BSgenome.Hsapiens.UCSC.hg38, prom)
+promseq
+```
+
+Finally, we calculate some sequence features: The percent of G and C bases, and
+the ratio of observed over expected CpG dinucleotides (where the expected
+frequency of a dinucleotide is the product of the frequencies of the two
+mononucleotides). We obtain the mono- and dinucleotide frequencies from the
+sequences using the `oligonucleotideFrequency` function from the
+`r Biocpkg("Biostrings")` package:
+
+```{r}
+mo <- oligonucleotideFrequency(promseq, width = 1, as.prob = TRUE)
+di <- oligonucleotideFrequency(promseq, width = 2, as.prob = TRUE)
+
+head(mo)
+head(di)
+
+percentGC <- 100 * (mo[, "C"] + mo[, "G"])
+expectedCpG <- mo[, "C"] * mo[, "G"]
+obsExpRatioCpG <- di[, "CG"] / expectedCpG
+```
+
+Finally, we can look at the distribution of these sequence features.
+The percentage of G+C bases in promoters spans a broad range from about 30% to
+over 70%:
+
+```{r}
+#| fig.width: 6
+#| fig.height: 6
+hist(percentGC, 60)
+```
+
+Defining CpG island promoters using this distribution would be hard, but is
+much easier using the observed over expected ratio of CpGs, which shows a
+much clearer bimodal structure:
+
+```{r}
+#| fig.width: 6
+#| fig.height: 6
+hist(obsExpRatioCpG, 60)
+abline(v = 0.45, col = 2, lty = 2)
+```
+
+Interestingly, almost all ratios are below 1.0, indicating that CpG islands
+are in fact not enriched for CpG dinucleotides, but rather lose them at a
+lower rate than other genomic regions.
+
+Plotting the ratio versus the GC percentage furthermore reveals that CpG island
+promoters are also slightly GC-richer:
+
+```{r}
+#| fig.width: 6
+#| fig.height: 6
+plot(obsExpRatioCpG, percentGC, pch = "*", col = "#22222205")
+abline(v = 0.45, col = 2, lty = 2)
+```
+
+# Further reading
+
+More examples of how to represent and work with biological sequences are
+contained in the vignettes of the `r Biocpkg("Biostrings")` package,
+available for example from `vignette(package = "Biostrings")`.
+
+If no `BSgenome` object is available for your genome of interest, you can also
+use alternative sources to extract your sequences from, such as `DNAStringSet`
+objects or files in fasta or 2bit format. A list of inputs supported by the
+`getSeq` function can be obtained using:
+
+```{r}
+showMethods(getSeq)
+```
+
+For more information about CpG islands, see:
+
+- Bird A, Taggart M, Frommer M, Miller OJ, Macleod D. A fraction of the mouse
+  genome that is derived from islands of nonmethylated, CpG-rich DNA.
+  Cell. 1985 Jan;40(1):91-9. doi: 10.1016/0092-8674(85)90312-5. PMID: 2981636.
+- Gardiner-Garden M, Frommer M. CpG islands in vertebrate genomes.
+  J Mol Biol. 1987 Jul 20;196(2):261-82.
+  doi: 10.1016/0022-2836(87)90689-9. PMID: 3656447.
+
+# Session info
+
+<details>
+<summary><b>
+Click to display session info
+</b></summary>
+```{r}
+sessionInfo()
+```
+</details>

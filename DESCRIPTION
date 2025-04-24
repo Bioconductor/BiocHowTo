@@ -51,6 +51,10 @@ Authors@R: c(
     person(
         "Robert", "Castelo",
         role = "aut"
+    ),
+    person(
+        "Michael", "Stadler",
+        role = "aut"
     )
   )
 Description: This package provides a crowd-sourced collection of 'How To'
@@ -81,3 +85,5 @@ Imports:
     Rsamtools,
     GSEABase,
     GSVA
+URL: https://github.com/bioconductor/BiocHowTo, 
+    https://bioconductor.github.io/BiocHowTo/
