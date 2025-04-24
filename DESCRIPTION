@@ -47,6 +47,10 @@ Authors@R: c(
     person(
         "Jenny", "Drnevich",
         role = "aut"
+    ),
+    person(
+        "Michael", "Stadler",
+        role = "aut"
     )
   )
 Description: This package provides a crowd-sourced collection of 'How To'
