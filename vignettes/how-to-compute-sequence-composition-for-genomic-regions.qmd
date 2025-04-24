@@ -1,6 +1,6 @@
 ---
 title: How to compute sequence composition for genomic regions
-author: EDIT:HowToAuthor
+author: Michael Stadler
 date: "`r Sys.Date()`"
 vignette: >
   %\VignetteIndexEntry{How to compute sequence composition for genomic regions}
@@ -93,18 +93,10 @@ promseq <- getSeq(BSgenome.Hsapiens.UCSC.hg38, prom)
 promseq
 ```
 
-Alternative sources of the genome sequence are also supported by the
-`getSeq` function, such as `DNAStringSet` objects or files in fasta or 2bit
-format:
-
-```{r}
-showMethods(getSeq)
-```
-
 Finally, we calculate some sequence features: The percent of G and C bases, and
 the ratio of observed over expected CpG dinucleotides (where the expected
 frequency of a dinucleotide is the product of the frequencies of the two
-mononucleoties). We obtain the mono- and dinucleotide frequencies from the
+mononucleotides). We obtain the mono- and dinucleotide frequencies from the
 sequences using the `oligonucleotideFrequency` function from the
 `r Biocpkg("Biostrings")` package:
 
@@ -160,6 +152,15 @@ abline(v = 0.45, col = 2, lty = 2)
 More examples of how to represent and work with biological sequences are
 contained in the vignettes of the `r Biocpkg("Biostrings")` package,
 available for example from `vignette(package = "Biostrings")`.
+
+If no `BSgenome` object is available for your genome of interest, you can also
+use alternative sources to extract your sequences from, such as `DNAStringSet`
+objects or files in fasta or 2bit format. A list of inputs supported by the
+`getSeq` function can be obtained using:
+
+```{r}
+showMethods(getSeq)
+```
 
 For more information about CpG islands, see:
 
