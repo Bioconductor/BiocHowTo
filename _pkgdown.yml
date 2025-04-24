@@ -4,9 +4,8 @@ template:
 
 navbar:
   structure:
-    left:
-      - home
-      - articles
+    left: [home, articles]
+    right: [search, github]
 
 articles:
 - title: Interacting with BAM files
