@@ -22,6 +22,7 @@ articles:
   contents:
   - how-to-retrieve-gene-model-from-annotationhub
   - how-to-load-gene-from-gff-gtf
+  - how-to-read-gene-sets-from-gmt-files
 
 - title: Working with biological sequences
   contents:
