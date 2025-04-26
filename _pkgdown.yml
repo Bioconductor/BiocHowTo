@@ -1,6 +1,8 @@
 url: https://bioconductor.github.io/BiocHowTo/
 template:
   bootstrap: 5
+  params:
+    bootswatch: zephyr
 
 navbar:
   structure:
