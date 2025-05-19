@@ -51,6 +51,10 @@ Authors@R: c(
     person(
         "Robert", "Castelo",
         role = "aut"
+    ),
+    person(
+        "Michael", "Stadler",
+        role = "aut"
     )
   )
 Description: This package provides a crowd-sourced collection of 'How To'
@@ -74,5 +78,12 @@ Imports:
     MsDataHub,
     Spectra,
     AnnotationHub,
+    TxDb.Hsapiens.UCSC.hg38.knownGene,
+    BSgenome.Hsapiens.UCSC.hg38,
+    GenomicFeatures,
+    Biostrings,
+    Rsamtools,
     GSEABase,
     GSVA
+URL: https://github.com/bioconductor/BiocHowTo, 
+    https://bioconductor.github.io/BiocHowTo/

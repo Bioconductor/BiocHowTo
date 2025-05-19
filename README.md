@@ -1,8 +1,18 @@
+<br>
+
+<img src="man/figures/bioconductor.png" align="right" alt="Bioconductor logo" width="150"/>
+
+<br>
+
 # BiocHowTo
 
-This repository contains stand-alone "How To" documents related to 
-Bioconductor. A HowTo should be short, and focus on how to solve a 
-well-defined question using one or more Bioconductor packages. 
+<br>
+
+Welcome to the Bioconductor HowTo collection! The HowTos are short, 
+stand-alone documents, each focused on how to address a well-defined question 
+using one or more Bioconductor packages. 
+
+For a list of the available HowTo documents, see the [Articles](articles/index.html) tab.
 
 ## How to contribute
 

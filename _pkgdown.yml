@@ -1,6 +1,13 @@
-url: https://csoneson.github.io/BiocHowTo/
+url: https://bioconductor.github.io/BiocHowTo/
 template:
   bootstrap: 5
+  params:
+    bootswatch: zephyr
+
+navbar:
+  structure:
+    left: [home, articles]
+    right: [search, github]
 
 articles:
 - title: Interacting with BAM files
@@ -8,7 +15,8 @@ articles:
   - how-to-read-single-end-reads-from-bam-file
   - how-to-read-paired-end-reads-from-bam-file
   - how-to-read-big-bam-file-in-chunks
-  
+  - how-to-compute-read-coverage
+
 - title: Mass spectrometry
   contents:
   - how-to-read-mass-spectrometry-data
@@ -17,4 +25,9 @@ articles:
   contents:
   - how-to-retrieve-gene-model-from-annotationhub
   - how-to-load-gene-from-gff-gtf
+  - how-to-get-exon-intron-sequence-for-gene
   - how-to-read-gene-sets-from-gmt-files
+
+- title: Working with biological sequences
+  contents:
+  - how-to-compute-sequence-composition-for-genomic-regions
