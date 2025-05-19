@@ -55,6 +55,10 @@ Authors@R: c(
     person(
         "Michael", "Stadler",
         role = "aut"
+    ),
+    person(
+        "Fabricio", "Almeida-Silva",
+        role = "aut"
     )
   )
 Description: This package provides a crowd-sourced collection of 'How To'
@@ -84,6 +88,9 @@ Imports:
     Biostrings,
     Rsamtools,
     GSEABase,
-    GSVA
+    GSVA,
+    rtracklayer,
+    GenomicRanges,
+    BSgenome
 URL: https://github.com/bioconductor/BiocHowTo, 
     https://bioconductor.github.io/BiocHowTo/
