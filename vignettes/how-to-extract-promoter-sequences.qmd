@@ -25,8 +25,10 @@ suppressPackageStartupMessages({
 })
 ```
 
-Promoters are DNA sequences that contain binding sites for transcription 
-factors. Researchers working on gene regulation often want to extract
+Promoters are DNA sequences typically located upstream of a 
+gene's transcription start site (TSS), and they contain binding 
+sites for transcription factors. 
+Researchers working on gene regulation often want to extract
 promoter sequences for all genes or a set of genes. With these sequences,
 researchers can, for example, look for known transcription factor 
 binding sites (TFBS), or predict TFBS *de novo*. This HowTo will demonstrate
@@ -112,7 +114,13 @@ Next, we can use the `promoters()` function from
 `r Biocpkg("GenomicRanges")` to extract the genomic coordinates of promoters.
 By default, promoters start at 2000 bp upstream the transcription start 
 site (TSS), and end at 200 bp downstream the TSS, but you can modify these 
-positions in parameters *upstream* and *downstream* of `promoters()`.
+positions in parameters *upstream* and *downstream* of `promoters()`. 
+For example, some transcription factor families in plants 
+(e.g. HSF and C2C2-GATA) bind exclusively to regions downstream the TSS, which
+is contrary to the common view of TFBS being located upstream TSSs.
+Importantly, if a gene has multiple TSSs (e.g., because of different 
+transcripts starting at different positions), the most upstream TSS is 
+used, not a cleverly chosen 'representative' or 'canonical' transcript.
 
 ```{r}
 # Get promoter regions from a `GRanges` object
@@ -122,19 +130,44 @@ prom_genes
 ```
 
 Alternatively, if you want to extract promoters for each transcript separately,
-you can use the `promoters()` function from `r Biocpkg("GenomicFeatures")`. 
-Unlike `GenomicRanges::promoters()`, `GenomicFeatures::promoters()` takes a
-`TxDb` object as input, so you will first need to create it.
+you can subset the `GRanges` object to extract only ranges of 
+type 'transcript', and then use `promoters()` as demonstrated above.
+Note that GFF3 files from some databases do not contain a 'transcript' type.
+In these cases, you will most likely find transcript-level ranges in rows of 
+type 'mRNA'. This is the case for [Ensembl Plants](https://plants.ensembl.org), 
+from where we obtained our example data. 
+To extract promoters for each *A. thaliana* transcript, you'd execute:
+
+```{r}
+# Extract transcript ranges from a GRanges object
+tx_ranges <- annotation[annotation$type == "mRNA"] # or 'transcript' (if any)
+
+# Extract promoters for each transcript separately
+prom_tx <- promoters(tx_ranges)
+prom_tx
+```
+
+::: {.callout-tip}
+
+## Extracting promoter regions from `TxDb` objects
+
+If you have a `TxDb` object with transcript coordinates and metadata,
+you can extract promoter regions for each transcript with the `promoters()`
+function from the `r Biocpkg("GenomicFeatures")` package. Note that function names
+are the same, but `GenomicFeatures::promoters()` takes `TxDb` objects as input, 
+while `GenomicRanges::promoters()` takes `GRanges` objects as input.
 
 ```{r}
 # Create a `TxDb` object from a `GRanges` object
 txdb <- txdbmaker::makeTxDbFromGRanges(annotation)
 
 # Get promoter regions for all transcripts
-prom_tx <- GenomicFeatures::promoters(txdb)
+prom_tx2 <- GenomicFeatures::promoters(txdb)
 
-prom_tx
+prom_tx2
 ```
+
+:::
 
 Finally, you can extract sequences given a genome and some coordinates with
 the `getSeq()` function from `r Biocpkg("BSgenome")`.
