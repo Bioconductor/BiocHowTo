@@ -31,3 +31,4 @@ articles:
 - title: Working with biological sequences
   contents:
   - how-to-compute-sequence-composition-for-genomic-regions
+  - how-to-extract-promoter-sequences

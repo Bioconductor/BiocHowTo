@@ -1,0 +1,198 @@
+---
+title: How to extract promoter sequences
+author: Fabricio Almeida-Silva
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{How to extract promoter sequences}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+    opts_chunk:
+        collapse: true
+        comment: '#>'
+format:
+    html:
+        toc: true
+        html-math-method: mathjax
+        embed-resources: true
+---
+
+```{r}
+#| echo: false
+
+suppressPackageStartupMessages({
+    library(BiocStyle)
+})
+```
+
+Promoters are DNA sequences typically located upstream of a 
+gene's transcription start site (TSS), and they contain binding 
+sites for transcription factors. 
+Researchers working on gene regulation often want to extract
+promoter sequences for all genes or a set of genes. With these sequences,
+researchers can, for example, look for known transcription factor 
+binding sites (TFBS), or predict TFBS *de novo*. This HowTo will demonstrate
+how to extract promoter sequences for any gene(s) in a genome.
+
+# Bioconductor packages used in this document
+
+* `r Biocpkg("Biostrings")`
+* `r Biocpkg("rtracklayer")`
+* `r Biocpkg("GenomicRanges")`
+* `r Biocpkg("txdbmaker")`
+* `r Biocpkg("GenomicFeatures")`
+* `r Biocpkg("BSgenome")`
+
+# How to extract promoter sequences
+
+We will start by loading the required packages.
+
+```{r}
+#| message: false
+
+library(Biostrings)
+library(GenomicRanges)
+library(rtracklayer)
+library(txdbmaker)
+library(GenomicFeatures)
+library(BSgenome)
+```
+
+Then, we will get our example data set. Here, we will use data for 
+the model plant *Arabidopsis thaliana*. We will start by obtaining 
+genome sequences and gene annotation from [Ensembl Plants](https://plants.ensembl.org).
+
+::: {.callout-note}
+
+## Working with model and non-model organisms
+
+Here, we're obtaining data from [Ensembl Plants](https://plants.ensembl.org)
+to explicitly show how this can be done for **any** organism. However,
+if you're lucky enough to work with a model organism (e.g. human, mouse, etc),
+you can find curated genome sequences and gene annotation 
+in `r Biocpkg("AnnotationHub")` (see, for instance, 
+[this](https://bioconductor.github.io/BiocHowTo/articles/how-to-retrieve-gene-model-from-annotationhub.html) HowTo article).
+
+:::
+
+```{r}
+# Read genomic data from Ensembl Plants
+## Genome
+genome <- Biostrings::readDNAStringSet(
+    "https://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-61/fasta/arabidopsis_thaliana/dna/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.gz"
+)
+names(genome) <- gsub(" .*", "", names(genome)) # remove text after chr name
+
+## Annotation
+annotation <- rtracklayer::import(
+    "https://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-61/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.61.gff3.gz"
+)
+```
+
+Genome sequences are stored in `DNAStringSet` objects, and 
+gene annotation (i.e., start and end coordinates of each gene) are stored in 
+`GRanges` objects. This is what these objects look like:
+
+```{r}
+# Take a look at the genome and annotation
+genome
+annotation
+```
+
+Note that our `GRanges` object contains ranges for multiple types of features,
+including genes, mRNAs, exons, and even entire chromosomes. 
+Since we're only interested in promoter regions, we will subset
+`annotation` to keep only 'gene' ranges.
+
+```{r}
+# Keep only gene ranges
+genes <- annotation[annotation$type == "gene"]
+genes
+```
+
+Next, we can use the `promoters()` function from 
+`r Biocpkg("GenomicRanges")` to extract the genomic coordinates of promoters.
+By default, promoters start at 2000 bp upstream the transcription start 
+site (TSS), and end at 200 bp downstream the TSS, but you can modify these 
+positions in parameters *upstream* and *downstream* of `promoters()`. 
+For example, some transcription factor families in plants 
+(e.g. HSF and C2C2-GATA) bind exclusively to regions downstream the TSS, which
+is contrary to the common view of TFBS being located upstream TSSs.
+Importantly, if a gene has multiple TSSs (e.g., because of different 
+transcripts starting at different positions), the most upstream TSS is 
+used, not a cleverly chosen 'representative' or 'canonical' transcript.
+
+```{r}
+# Get promoter regions from a `GRanges` object
+prom_genes <- GenomicRanges::promoters(genes)
+
+prom_genes
+```
+
+Alternatively, if you want to extract promoters for each transcript separately,
+you can subset the `GRanges` object to extract only ranges of 
+type 'transcript', and then use `promoters()` as demonstrated above.
+Note that GFF3 files from some databases do not contain a 'transcript' type.
+In these cases, you will most likely find transcript-level ranges in rows of 
+type 'mRNA'. This is the case for [Ensembl Plants](https://plants.ensembl.org), 
+from where we obtained our example data. 
+To extract promoters for each *A. thaliana* transcript, you'd execute:
+
+```{r}
+# Extract transcript ranges from a GRanges object
+tx_ranges <- annotation[annotation$type == "mRNA"] # or 'transcript' (if any)
+
+# Extract promoters for each transcript separately
+prom_tx <- promoters(tx_ranges)
+prom_tx
+```
+
+::: {.callout-tip}
+
+## Extracting promoter regions from `TxDb` objects
+
+If you have a `TxDb` object with transcript coordinates and metadata,
+you can extract promoter regions for each transcript with the `promoters()`
+function from the `r Biocpkg("GenomicFeatures")` package. Note that function names
+are the same, but `GenomicFeatures::promoters()` takes `TxDb` objects as input, 
+while `GenomicRanges::promoters()` takes `GRanges` objects as input.
+
+```{r}
+# Create a `TxDb` object from a `GRanges` object
+txdb <- txdbmaker::makeTxDbFromGRanges(annotation)
+
+# Get promoter regions for all transcripts
+prom_tx2 <- GenomicFeatures::promoters(txdb)
+
+prom_tx2
+```
+
+:::
+
+Finally, you can extract sequences given a genome and some coordinates with
+the `getSeq()` function from `r Biocpkg("BSgenome")`.
+
+```{r}
+# Extract promoter sequences (1k genes only for demo purposes)
+prom_seqs <- getSeq(genome, prom_genes[1:1000])
+
+prom_seqs
+```
+
+
+# Further reading
+
+To learn more about how to work with sequences and ranges using Bioconductor 
+packages, look at the vignettes of the `r Biocpkg("Biostrings")` and
+`r Biocpkg("GenomicRanges")` packages.
+
+# Session info
+
+<details>
+<summary><b>
+Click to display session info
+</b></summary>
+```{r}
+sessionInfo()
+```
+</details>
