@@ -1,14 +1,19 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1.9000
-pkgdown_sha: 62d5c5a0fc12899aae97f6ce14018d2784bf308b
+pkgdown: 2.1.3.9000
+pkgdown_sha: f950aed41af49c732ba7884d0806c3641a7b94b3
 articles:
+  how-to-compute-read-coverage: how-to-compute-read-coverage.html
+  how-to-compute-sequence-composition-for-genomic-regions: how-to-compute-sequence-composition-for-genomic-regions.html
+  how-to-extract-promoter-sequences: how-to-extract-promoter-sequences.html
+  how-to-get-exon-intron-sequence-for-gene: how-to-get-exon-intron-sequence-for-gene.html
   how-to-load-gene-from-gff-gtf: how-to-load-gene-from-gff-gtf.html
   how-to-read-big-bam-file-in-chunks: how-to-read-big-bam-file-in-chunks.html
+  how-to-read-gene-sets-from-gmt-files: how-to-read-gene-sets-from-gmt-files.html
   how-to-read-mass-spectrometry-data: how-to-read-mass-spectrometry-data.html
   how-to-read-paired-end-reads-from-bam-file: how-to-read-paired-end-reads-from-bam-file.html
   how-to-read-single-end-reads-from-bam-file: how-to-read-single-end-reads-from-bam-file.html
   how-to-retrieve-gene-model-from-annotationhub: how-to-retrieve-gene-model-from-annotationhub.html
-last_built: 2025-04-20T14:57Z
+last_built: 2025-05-23T05:06Z
 urls:
-  reference: https://csoneson.github.io/BiocHowTo/reference
-  article: https://csoneson.github.io/BiocHowTo/articles
+  reference: https://bioconductor.github.io/BiocHowTo/reference
+  article: https://bioconductor.github.io/BiocHowTo/articles

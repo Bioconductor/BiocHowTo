@@ -1,16 +1,21 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
-<url><loc>https://csoneson.github.io/BiocHowTo/404.html</loc></url>
-<url><loc>https://csoneson.github.io/BiocHowTo/LICENSE-text.html</loc></url>
-<url><loc>https://csoneson.github.io/BiocHowTo/LICENSE.html</loc></url>
-<url><loc>https://csoneson.github.io/BiocHowTo/articles/how-to-load-gene-from-gff-gtf.html</loc></url>
-<url><loc>https://csoneson.github.io/BiocHowTo/articles/how-to-read-big-bam-file-in-chunks.html</loc></url>
-<url><loc>https://csoneson.github.io/BiocHowTo/articles/how-to-read-mass-spectrometry-data.html</loc></url>
-<url><loc>https://csoneson.github.io/BiocHowTo/articles/how-to-read-paired-end-reads-from-bam-file.html</loc></url>
-<url><loc>https://csoneson.github.io/BiocHowTo/articles/how-to-read-single-end-reads-from-bam-file.html</loc></url>
-<url><loc>https://csoneson.github.io/BiocHowTo/articles/how-to-retrieve-gene-model-from-annotationhub.html</loc></url>
-<url><loc>https://csoneson.github.io/BiocHowTo/articles/index.html</loc></url>
-<url><loc>https://csoneson.github.io/BiocHowTo/authors.html</loc></url>
-<url><loc>https://csoneson.github.io/BiocHowTo/index.html</loc></url>
-<url><loc>https://csoneson.github.io/BiocHowTo/reference/index.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/404.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/LICENSE-text.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/LICENSE.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/articles/how-to-compute-read-coverage.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/articles/how-to-compute-sequence-composition-for-genomic-regions.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/articles/how-to-extract-promoter-sequences.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/articles/how-to-get-exon-intron-sequence-for-gene.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/articles/how-to-load-gene-from-gff-gtf.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/articles/how-to-read-big-bam-file-in-chunks.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/articles/how-to-read-gene-sets-from-gmt-files.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/articles/how-to-read-mass-spectrometry-data.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/articles/how-to-read-paired-end-reads-from-bam-file.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/articles/how-to-read-single-end-reads-from-bam-file.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/articles/how-to-retrieve-gene-model-from-annotationhub.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/articles/index.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/authors.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/index.html</loc></url>
+<url><loc>https://bioconductor.github.io/BiocHowTo/reference/index.html</loc></url>
 </urlset>
 

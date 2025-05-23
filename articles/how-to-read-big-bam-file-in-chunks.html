@@ -12,13 +12,14 @@
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="how-to-read-big-bam-file-in-chunks_files/libs/quarto-html/popper.min.js"></script><script src="how-to-read-big-bam-file-in-chunks_files/libs/quarto-html/tippy.umd.min.js"></script><link href="how-to-read-big-bam-file-in-chunks_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="how-to-read-big-bam-file-in-chunks_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="How to read a BAM file in chunks">
+<!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<meta property="og:title" content="How to read a BAM file in chunks">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">BiocHowTo</a>
 
@@ -31,13 +32,13 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/bioconductor/BiocHowTo/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -50,9 +51,9 @@
       <h1>How to read a BAM file in chunks</h1>
 
       <p class="author">Bioconductor Core Team</p>
-      <p class="date">2025-04-20</p>
+      <p class="date">2025-05-23</p>
 
-
+      <small class="dont-index">Source: <a href="https://github.com/bioconductor/BiocHowTo/blob/devel/vignettes/how-to-read-big-bam-file-in-chunks.qmd" class="external-link"><code>vignettes/how-to-read-big-bam-file-in-chunks.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -140,12 +141,12 @@
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.5.0 (2025-04-11)</span></span>
-<span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sonoma 14.7.4</span></span>
+<span><span class="co">#&gt; Platform: x86_64-apple-darwin20</span></span>
+<span><span class="co">#&gt; Running under: macOS Ventura 13.7.5</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
-<span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
-<span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
+<span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-x86_64/Resources/lib/libRblas.0.dylib </span></span>
+<span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
 <span><span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
@@ -158,138 +159,120 @@
 <span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] GenomicAlignments_1.45.0    SummarizedExperiment_1.37.0</span></span>
-<span><span class="co">#&gt;  [3] Biobase_2.67.0              MatrixGenerics_1.19.1      </span></span>
-<span><span class="co">#&gt;  [5] matrixStats_1.5.0           Rsamtools_2.23.1           </span></span>
-<span><span class="co">#&gt;  [7] Biostrings_2.75.4           XVector_0.47.2             </span></span>
-<span><span class="co">#&gt;  [9] GenomicRanges_1.59.1        GenomeInfoDb_1.43.4        </span></span>
-<span><span class="co">#&gt; [11] IRanges_2.41.3              S4Vectors_0.45.4           </span></span>
-<span><span class="co">#&gt; [13] BiocGenerics_0.53.6         generics_0.1.3             </span></span>
+<span><span class="co">#&gt;  [1] GenomicAlignments_1.45.0    SummarizedExperiment_1.39.0</span></span>
+<span><span class="co">#&gt;  [3] Biobase_2.69.0              MatrixGenerics_1.21.0      </span></span>
+<span><span class="co">#&gt;  [5] matrixStats_1.5.0           Rsamtools_2.25.0           </span></span>
+<span><span class="co">#&gt;  [7] Biostrings_2.77.1           XVector_0.49.0             </span></span>
+<span><span class="co">#&gt;  [9] GenomicRanges_1.61.0        GenomeInfoDb_1.45.3        </span></span>
+<span><span class="co">#&gt; [11] IRanges_2.43.0              S4Vectors_0.47.0           </span></span>
+<span><span class="co">#&gt; [13] BiocGenerics_0.55.0         generics_0.1.4             </span></span>
 <span><span class="co">#&gt; [15] pasillaBamSubset_0.47.0     BiocStyle_2.37.0           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] Matrix_1.7-3            jsonlite_2.0.0          compiler_4.5.0         </span></span>
-<span><span class="co">#&gt;  [4] BiocManager_1.30.25     crayon_1.5.3            bitops_1.0-9           </span></span>
-<span><span class="co">#&gt;  [7] parallel_4.5.0          BiocParallel_1.41.5     yaml_2.3.10            </span></span>
-<span><span class="co">#&gt; [10] fastmap_1.2.0           lattice_0.22-7          R6_2.6.1               </span></span>
-<span><span class="co">#&gt; [13] S4Arrays_1.7.3          knitr_1.50              DelayedArray_0.33.6    </span></span>
-<span><span class="co">#&gt; [16] GenomeInfoDbData_1.2.14 rlang_1.1.6             xfun_0.52              </span></span>
-<span><span class="co">#&gt; [19] SparseArray_1.7.7       cli_3.6.4               grid_4.5.0             </span></span>
-<span><span class="co">#&gt; [22] digest_0.6.37           evaluate_1.0.3          codetools_0.2-20       </span></span>
-<span><span class="co">#&gt; [25] abind_1.4-8             rmarkdown_2.29          httr_1.4.7             </span></span>
-<span><span class="co">#&gt; [28] tools_4.5.0             htmltools_0.5.8.1       UCSC.utils_1.3.1</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] Matrix_1.7-3        jsonlite_2.0.0      compiler_4.5.0     </span></span>
+<span><span class="co">#&gt;  [4] BiocManager_1.30.25 crayon_1.5.3        bitops_1.0-9       </span></span>
+<span><span class="co">#&gt;  [7] parallel_4.5.0      BiocParallel_1.43.2 yaml_2.3.10        </span></span>
+<span><span class="co">#&gt; [10] fastmap_1.2.0       lattice_0.22-7      R6_2.6.1           </span></span>
+<span><span class="co">#&gt; [13] S4Arrays_1.9.0      knitr_1.50          DelayedArray_0.35.1</span></span>
+<span><span class="co">#&gt; [16] rlang_1.1.6         xfun_0.52           SparseArray_1.9.0  </span></span>
+<span><span class="co">#&gt; [19] cli_3.6.5           digest_0.6.37       grid_4.5.0         </span></span>
+<span><span class="co">#&gt; [22] evaluate_1.0.3      codetools_0.2-20    abind_1.4-8        </span></span>
+<span><span class="co">#&gt; [25] rmarkdown_2.29      httr_1.4.7          tools_4.5.0        </span></span>
+<span><span class="co">#&gt; [28] htmltools_0.5.8.1   UCSC.utils_1.5.0</span></span></code></pre></div>
 </div>
 </details></section><script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
         }
       }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'light-border',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config);
-  }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
       }
-    } else {
-      return undefined;
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config);
     }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
         });
-        return popup.innerHTML;
-      });
+      }
     }
-  }
-});
-</script></main>
+  });
+  </script></main>
 </div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Charlotte Soneson, Hervé Pagès, Dan Tenenbaum, Valerie Obenchain, Marc Carlson, Martin Morgan, James Hester, Vince Carey, Laurent Gatto, Pedro Baldoni, Jenny Drnevich.</p>
+  <p>Developed by Charlotte Soneson, Hervé Pagès, Dan Tenenbaum, Valerie Obenchain, Marc Carlson, Martin Morgan, James Hester, Vince Carey, Laurent Gatto, Pedro Baldoni, Jenny Drnevich, Robert Castelo, Michael Stadler, Fabricio Almeida-Silva.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.9000.</p>
 </div>
 
     </footer>
