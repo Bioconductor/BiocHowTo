@@ -1,6 +1,6 @@
 ---
 title: How to use tidy principles for RNA-seq data analysis
-author: Bioconductor Core Team
+author: Jacques Serizay
 date: "`r Sys.Date()`"
 vignette: >
   %\VignetteIndexEntry{How to use tidy principles for RNA-seq data analysis}
@@ -23,6 +23,13 @@ suppressPackageStartupMessages({
     library(BiocStyle)
 })
 ```
+
+Tidy data principles are a set of principles for structuring data in a way 
+that makes it easier to manipulate and analyze. They have been popularized by the
+`tidyverse` collection of R packages, which includes `dplyr` for data manipulation 
+and `ggplot2` for data visualization. The tidy principles can also be applied to
+biological data, such as RNA-seq data, to facilitate analysis and visualization, 
+thanks to the `tidyomics` meta-package.
 
 # Bioconductor packages used in this document
 
@@ -96,6 +103,8 @@ pbmc_small |>
     geom_jitter(width=0.1) +
     facet_wrap( ~ annotation)
 ```
+
+# Further reading 
 
 To read more about the `tidyomics` packages, please refer to the
 [tidyomics](https://github.com/tidyomics) GitHub organization page. 
