@@ -21,6 +21,10 @@ articles:
   contents:
   - how-to-read-mass-spectrometry-data
 
+- title: Tidy principles in Bioconductor
+  contents:
+  - how-to-use-tidy-principles-for-rna-seq-analysis
+
 - title: Accessing genomic annotation data
   contents:
   - how-to-retrieve-gene-model-from-annotationhub
