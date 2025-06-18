@@ -1,6 +1,6 @@
 pandoc: 3.1.11
 pkgdown: 2.1.3.9000
-pkgdown_sha: f950aed41af49c732ba7884d0806c3641a7b94b3
+pkgdown_sha: 824ab4a4f20ecd895282b434d8652120e1f62ba4
 articles:
   how-to-compute-read-coverage: how-to-compute-read-coverage.html
   how-to-compute-sequence-composition-for-genomic-regions: how-to-compute-sequence-composition-for-genomic-regions.html
@@ -13,7 +13,8 @@ articles:
   how-to-read-paired-end-reads-from-bam-file: how-to-read-paired-end-reads-from-bam-file.html
   how-to-read-single-end-reads-from-bam-file: how-to-read-single-end-reads-from-bam-file.html
   how-to-retrieve-gene-model-from-annotationhub: how-to-retrieve-gene-model-from-annotationhub.html
-last_built: 2025-05-23T05:06Z
+  how-to-use-tidy-principles-for-rna-seq-analysis: how-to-use-tidy-principles-for-rna-seq-analysis.html
+last_built: 2025-06-18T14:24Z
 urls:
   reference: https://bioconductor.github.io/BiocHowTo/reference
   article: https://bioconductor.github.io/BiocHowTo/articles

@@ -51,7 +51,7 @@
       <h1>How to load a gene model from a GFF or GTF file</h1>
 
       <p class="author">Bioconductor Core Team</p>
-      <p class="date">2025-05-23</p>
+      <p class="date">2025-06-18</p>
 
       <small class="dont-index">Source: <a href="https://github.com/bioconductor/BiocHowTo/blob/devel/vignettes/how-to-load-gene-from-gff-gtf.qmd" class="external-link"><code>vignettes/how-to-load-gene-from-gff-gtf.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -86,12 +86,11 @@
 <span><span class="co">#&gt; # Data source: /Users/runner/work/_temp/Library/txdbmaker/extdata/GFF3_files/a.gff3</span></span>
 <span><span class="co">#&gt; # Organism: NA</span></span>
 <span><span class="co">#&gt; # Taxonomy ID: NA</span></span>
-<span><span class="co">#&gt; # miRBase build ID: NA</span></span>
 <span><span class="co">#&gt; # Genome: NA</span></span>
 <span><span class="co">#&gt; # Nb of transcripts: 488</span></span>
 <span><span class="co">#&gt; # Db created by: txdbmaker package from Bioconductor</span></span>
-<span><span class="co">#&gt; # Creation time: 2025-05-23 05:08:41 +0000 (Fri, 23 May 2025)</span></span>
-<span><span class="co">#&gt; # txdbmaker version at creation time: 1.5.3</span></span>
+<span><span class="co">#&gt; # Creation time: 2025-06-18 14:28:10 +0000 (Wed, 18 Jun 2025)</span></span>
+<span><span class="co">#&gt; # txdbmaker version at creation time: 1.5.4</span></span>
 <span><span class="co">#&gt; # RSQLite version at creation time: 2.3.11</span></span>
 <span><span class="co">#&gt; # DBSCHEMAVERSION: 1.2</span></span></code></pre></div>
 </div>
@@ -140,9 +139,9 @@
 </summary><div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.5.0 (2025-04-11)</span></span>
+<span><span class="co">#&gt; R version 4.5.1 (2025-06-13)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Ventura 13.7.5</span></span>
+<span><span class="co">#&gt; Running under: macOS Ventura 13.7.6</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-x86_64/Resources/lib/libRblas.0.dylib </span></span>
@@ -159,7 +158,7 @@
 <span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] txdbmaker_1.5.3        GenomicFeatures_1.61.2 AnnotationDbi_1.71.0  </span></span>
+<span><span class="co">#&gt;  [1] txdbmaker_1.5.4        GenomicFeatures_1.61.3 AnnotationDbi_1.71.0  </span></span>
 <span><span class="co">#&gt;  [4] Biobase_2.69.0         GenomicRanges_1.61.0   GenomeInfoDb_1.45.3   </span></span>
 <span><span class="co">#&gt;  [7] IRanges_2.43.0         S4Vectors_0.47.0       BiocGenerics_0.55.0   </span></span>
 <span><span class="co">#&gt; [10] generics_0.1.4         BiocStyle_2.37.0      </span></span>
@@ -168,13 +167,13 @@
 <span><span class="co">#&gt;  [1] KEGGREST_1.49.0             SummarizedExperiment_1.39.0</span></span>
 <span><span class="co">#&gt;  [3] httr2_1.1.2                 rjson_0.2.23               </span></span>
 <span><span class="co">#&gt;  [5] xfun_0.52                   lattice_0.22-7             </span></span>
-<span><span class="co">#&gt;  [7] vctrs_0.6.5                 tools_4.5.0                </span></span>
-<span><span class="co">#&gt;  [9] bitops_1.0-9                curl_6.2.2                 </span></span>
-<span><span class="co">#&gt; [11] parallel_4.5.0              tibble_3.2.1               </span></span>
+<span><span class="co">#&gt;  [7] vctrs_0.6.5                 tools_4.5.1                </span></span>
+<span><span class="co">#&gt;  [9] bitops_1.0-9                curl_6.2.3                 </span></span>
+<span><span class="co">#&gt; [11] parallel_4.5.1              tibble_3.2.1               </span></span>
 <span><span class="co">#&gt; [13] RSQLite_2.3.11              blob_1.2.4                 </span></span>
 <span><span class="co">#&gt; [15] pkgconfig_2.0.3             Matrix_1.7-3               </span></span>
 <span><span class="co">#&gt; [17] dbplyr_2.5.0                lifecycle_1.0.4            </span></span>
-<span><span class="co">#&gt; [19] stringr_1.5.1               compiler_4.5.0             </span></span>
+<span><span class="co">#&gt; [19] stringr_1.5.1               compiler_4.5.1             </span></span>
 <span><span class="co">#&gt; [21] Rsamtools_2.25.0            Biostrings_2.77.1          </span></span>
 <span><span class="co">#&gt; [23] progress_1.2.3              codetools_0.2-20           </span></span>
 <span><span class="co">#&gt; [25] htmltools_0.5.8.1           RCurl_1.98-1.17            </span></span>
@@ -185,7 +184,7 @@
 <span><span class="co">#&gt; [35] digest_0.6.37               stringi_1.8.7              </span></span>
 <span><span class="co">#&gt; [37] dplyr_1.1.4                 restfulr_0.0.15            </span></span>
 <span><span class="co">#&gt; [39] biomaRt_2.65.0              fastmap_1.2.0              </span></span>
-<span><span class="co">#&gt; [41] grid_4.5.0                  cli_3.6.5                  </span></span>
+<span><span class="co">#&gt; [41] grid_4.5.1                  cli_3.6.5                  </span></span>
 <span><span class="co">#&gt; [43] SparseArray_1.9.0           magrittr_2.0.3             </span></span>
 <span><span class="co">#&gt; [45] S4Arrays_1.9.0              XML_3.99-0.18              </span></span>
 <span><span class="co">#&gt; [47] filelock_1.0.3              rappdirs_0.3.3             </span></span>
@@ -291,7 +290,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Charlotte Soneson, Hervé Pagès, Dan Tenenbaum, Valerie Obenchain, Marc Carlson, Martin Morgan, James Hester, Vince Carey, Laurent Gatto, Pedro Baldoni, Jenny Drnevich, Robert Castelo, Michael Stadler, Fabricio Almeida-Silva.</p>
+  <p>Developed by Charlotte Soneson, Hervé Pagès, Dan Tenenbaum, Valerie Obenchain, Marc Carlson, Martin Morgan, James Hester, Vince Carey, Laurent Gatto, Pedro Baldoni, Jenny Drnevich, Robert Castelo, Michael Stadler, Fabricio Almeida-Silva, Jacques Serizay.</p>
 </div>
 
 <div class="pkgdown-footer-right">
