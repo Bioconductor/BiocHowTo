@@ -1,0 +1,122 @@
+---
+title: How to use tidy principles for RNA-seq data analysis
+author: Jacques Serizay
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{How to use tidy principles for RNA-seq data analysis}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+    opts_chunk: 
+        collapse: true
+        comment: '#>'
+format:
+    html:
+        toc: true
+        html-math-method: mathjax
+---
+
+```{r}
+#| echo: false
+
+suppressPackageStartupMessages({
+    library(BiocStyle)
+})
+```
+
+Tidy data principles are a set of principles for structuring data in a way 
+that makes it easier to manipulate and analyze. They have been popularized by the
+`tidyverse` collection of R packages, which includes `dplyr` for data manipulation 
+and `ggplot2` for data visualization. The tidy principles can also be applied to
+biological data, such as RNA-seq data, to facilitate analysis and visualization, 
+thanks to the `tidyomics` meta-package.
+
+# Bioconductor packages used in this document
+
+* `r Biocpkg("tidyomics")`
+
+# How to manipulate SummarizedExperiment objects with tidy principles
+
+For illustration, we use data from the `r Biocpkg("tidySummarizedExperiment")` 
+package (included in the meta-package `r Biocpkg("tidyomics")`). 
+
+```{r}
+library(tidyomics)
+
+pasilla_tidy <- tidySummarizedExperiment::pasilla 
+pasilla_tidy
+```
+
+How `pasilla_tidy` object is printed is controlled by the `tidySummarizedExperiment` package, 
+and by default it is displayed as a `tibble`-like object. Note that this 
+behavior can be changed by setting the `options(restore_SummarizedExperiment_show = TRUE)` option. 
+
+```{r}
+# Turn off the tibble visualisation
+options("restore_SummarizedExperiment_show" = TRUE)
+pasilla_tidy
+
+# Turn on the tibble visualisation
+options("restore_SummarizedExperiment_show" = FALSE)
+pasilla_tidy
+```
+
+The `pasilla_tidy` object is a `SummarizedExperiment` object, and the 
+`tidySummarizedExperiment` packages adds an invisible layer to abstract the `SE` object as a
+`tibble`. This allows us to use the `dplyr` package to manipulate the data, and eventually 
+to directly plug data flow into `ggplot2` for visualization.
+
+```{r}
+pasilla_tidy |> 
+    filter(condition == "untreated", type == "single_end") |> 
+    select(-type) |> 
+    group_by(.feature, .sample) |> 
+    summarise(tot_counts = sum(counts)) |>
+    ggplot(aes(x = .sample, y = tot_counts+1, fill = .sample)) + 
+    geom_violin() + 
+    geom_boxplot(outliers = FALSE, width = 0.05, fill = "white") +
+    scale_y_log10() + 
+    annotation_logticks(side = 'l') +
+    labs(x = "Sample", y = "Total counts (log1p)") +
+    theme_bw()
+```
+
+Because these tidy methods are defined for `SummarizedExperiment` objects, 
+most classes built on top of `SummarizedExperiment`, such as `DESeqDataSet` or `SingleCellExperiment`, 
+can also be manipulated with tidy principles. This has prompted the development of 
+other packages (included in the `tidyomics` meta-package) that extend the tidy principles to
+other analyses, such as single-cell transcriptomics analysis.
+
+```{r}
+data(pbmc_small, package="tidySingleCellExperiment")
+pbmc_small
+
+## We can still manipulate the data with standard SummarizedExperiment methods
+counts(pbmc_small)[1:5, 1:4]
+
+## But we can also use tidy principles
+pbmc_small |> 
+    extract(file, "sample", "../data/([a-z0-9]+)/outs.+") |> 
+    rename(annotation = letter.idents) |> 
+    ggplot(aes(sample, nCount_RNA, fill=sample)) +
+    geom_boxplot(outlier.shape=NA) +
+    geom_jitter(width=0.1) +
+    facet_wrap( ~ annotation)
+```
+
+# Further reading 
+
+To read more about the `tidyomics` packages, please refer to the
+[tidyomics](https://github.com/tidyomics) GitHub organization page. 
+
+# Session info
+
+<details>
+<summary><b>
+Click to display session info
+</b></summary>
+```{r}
+sessionInfo()
+```
+</details>
+
