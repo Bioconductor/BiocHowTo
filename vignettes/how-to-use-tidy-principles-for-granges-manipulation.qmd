@@ -71,7 +71,7 @@ We convert it into a `GRanges` object directly using `as_granges()` from the `pl
 using [tidy evaluation as in `dplyr` package](https://dplyr.tidyverse.org/articles/programming.html). 
 
 ```{r}
-library(plyranges)
+library(tidyomics)
 gr <- tbl |> 
     as_granges(seqnames = chrom_ce11, start = start_ce11, end = end_ce11)
 gr
@@ -83,7 +83,6 @@ We can use the `select()` function from `dplyr` to select these columns,
 just like we would do with a `data.frame` or `tibble`.
 
 ```{r}
-library(tidyverse)
 gr <- gr |> 
     select(annot_dev_age_tissues, Annotation, ends_with("_RPM"))
 gr
