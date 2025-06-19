@@ -1,0 +1,184 @@
+---
+title: How to use tidy principles for genomic ranges manipulation
+author: Jacques Serizay
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{How to use tidy principles for genomic ranges manipulation}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+    opts_chunk: 
+        collapse: true
+        comment: '#>'
+format:
+    html:
+        toc: true
+        html-math-method: mathjax
+bibliography: ../inst/references.bib
+---
+
+```{r}
+#| echo: false
+
+suppressPackageStartupMessages({
+    library(BiocStyle)
+})
+```
+
+Tidy data principles are a set of principles for structuring data in a way 
+that makes it easier to manipulate and analyze. They have been popularized by the
+`tidyverse` collection of R packages, which includes `dplyr` for data manipulation 
+and `ggplot2` for data visualization. The tidy principles can also be applied to
+biological data, such as RNA-seq data, to facilitate analysis and visualization, 
+thanks to the `tidyomics` meta-package.
+
+# Bioconductor packages used in this document
+
+* `r Biocpkg("tidyomics")`
+
+# How to manipulate GRanges objects with tidy principles
+
+For illustration, we are going to download a `xlsx` file provided as a 
+Supplementary Data in [@Serizay2020Oct], and manipulate it using tidy principles.
+
+Good practices recommended by the Bioconductor consortium suggest to use 
+the `BiocFileCache` package to download and cache files from remote servers.
+
+```{r}
+library(BiocFileCache)
+
+# Create a BiocFileCache instance
+bfc <- BiocFileCache()
+
+# Download the xlsx file from Ensembl and cache it locally using BiocFileCache
+xlsx_url <- "https://genome.cshlp.org/content/suppl/2020/11/16/gr.265934.120.DC1/Supplemental_Table_S2.xlsx"
+xlsx_file <- bfcrpath(bfc, xlsx_url)
+
+# The file is now downloaded and available
+xlsx_file
+```
+
+Excel files can be read into `tibbles` in `R` thanks to the `read_xlsx()` function 
+from the `readxl` package.
+
+```{r}
+library(readxl)
+tbl <- read_xlsx(xlsx_file, sheet = "ATAC_metrics", skip = 2)
+tbl
+```
+
+We convert it into a `GRanges` object directly using `as_granges()` from the `plyranges` package, 
+using [tidy evaluation as in `dplyr` package](https://dplyr.tidyverse.org/articles/programming.html). 
+
+```{r}
+library(plyranges)
+gr <- tbl |> 
+    as_granges(seqnames = chrom_ce11, start = start_ce11, end = end_ce11)
+gr
+```
+
+Let's say we are not interested in all the metadata columns, and we want to keep only the
+`annot_dev_age_tissues`, `Annotation`, and the columns ending with `_RPM`. 
+We can use the `select()` function from `dplyr` to select these columns, 
+just like we would do with a `data.frame` or `tibble`.
+
+```{r}
+library(tidyverse)
+gr <- gr |> 
+    select(annot_dev_age_tissues, Annotation, ends_with("_RPM"))
+gr
+```
+
+In fact, most verbs from the `dplyr` package can be used with `GRanges` objects,
+such as `filter()`, `mutate()`, `arrange()`, `group_by()` and `summarise()`. 
+
+```{r}
+gr |> 
+    mutate(start = start - 1000, end = end + 1000) |>
+    filter(start > 1e6) |>
+    arrange(Intest._RPM) |>
+    group_by(annot_dev_age_tissues, Annotation) |> 
+    summarize(n = plyranges::n()) 
+```
+
+Note that the `summarize()` function automatically returns a `DataFrame`, not a `GRanges` object. 
+
+To enhance compatibility with the `tidyverse` ecosystem, the `plyranges` package
+provides a `as_tibble()` method for `GRanges` objects, which converts them
+into `tibbles`. This allows you to use pass `GRanges` objects to `ggplot` for visualization. 
+
+```{r}
+gr |> 
+    filter(Annotation %in% c("Intest.", "Hypod.", "Soma", "Ubiq.")) |>
+    as_tibble() |> 
+    ggplot(aes(x = `Intest._RPM`, y = `Hypod._RPM`, color = Annotation)) +
+    geom_point() +
+    labs(x = "Intestine RPM", y = "Hypodermis RPM") + 
+    facet_grid(Annotation~annot_dev_age_tissues) +
+    theme_bw() +
+    theme(legend.position = "bottom")
+```
+
+Finally, the `join` concept introduced by the `dplyr` package can also be applied to `GRanges` objects.
+In this case, the operation refers to joining overlapping, nearest, or preceding/following ranges, 
+using the `join_*_*()` function from the `plyranges` package.
+
+As an example, we can compare annotations from [@Serizay2020Oct] to chromosome 
+arms/center 
+
+```{r}
+arms <- GRanges(
+    seqnames = rep(c("chrI", "chrII", "chrIII", "chrIV", "chrV", "chrX"), each = 3),
+    ranges = IRanges(
+        start = c(
+            1, 4550001, 10750001, 
+            1, 4550001, 10750001, 
+            1, 4450001, 10150001, 
+            1, 4750001, 12650001, 
+            1, 4850001, 16250001, 
+            1, 2850001, 14250001
+        ), 
+        end = c(
+            4550000, 10750000, 15072423, 
+            4550000, 10750000, 15279345,
+            4450000, 10150000, 13783700,
+            4750000, 12650000, 17493793,
+            4850000, 16250000, 20924149,
+            2850000, 14250000, 17718866
+        )
+    ),
+    strand = "*",
+    part = rep(c("arm", "center", "arm"), 6)
+)
+
+gr |> 
+    join_overlap_left(arms) |> 
+    group_by(Annotation, part) |>
+    filter(Annotation %in% c("Germline", "Neurons")) |>
+    summarize(n = plyranges::n()) 
+```
+
+# Further reading 
+
+To read more about the `tidyomics` packages, please refer to the
+[tidyomics](https://github.com/tidyomics) GitHub organization page. 
+
+More tutorials are provided by the `tidyomics` GitHub organization in the 
+[tidy-ranges-tutorial](https://tidyomics.github.io/tidy-ranges-tutorial/) website. 
+
+# References
+
+::: {#refs}
+:::
+
+# Session info
+
+<details>
+<summary><b>
+Click to display session info
+</b></summary>
+```{r}
+sessionInfo()
+```
+</details>
+
