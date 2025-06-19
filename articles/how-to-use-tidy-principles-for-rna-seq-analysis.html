@@ -51,7 +51,7 @@
       <h1>How to use tidy principles for RNA-seq data analysis</h1>
 
       <p class="author">Jacques Serizay</p>
-      <p class="date">2025-06-18</p>
+      <p class="date">2025-06-19</p>
 
       <small class="dont-index">Source: <a href="https://github.com/bioconductor/BiocHowTo/blob/devel/vignettes/how-to-use-tidy-principles-for-rna-seq-analysis.qmd" class="external-link"><code>vignettes/how-to-use-tidy-principles-for-rna-seq-analysis.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -69,7 +69,7 @@
 <li><em><a href="https://bioconductor.org/packages/3.22/tidyomics" class="external-link">tidyomics</a></em></li>
 </ul></section><section class="section level2"><h2 id="how-to-manipulate-summarizedexperiment-objects-with-tidy-principles">How to manipulate SummarizedExperiment objects with tidy principles<a class="anchor" aria-label="anchor" href="#how-to-manipulate-summarizedexperiment-objects-with-tidy-principles"></a>
 </h2>
-<p>For illustration, we use data from the <em><a href="https://bioconductor.org/packages/3.22/tidySummarizedExperiment" class="external-link">tidySummarizedExperiment</a></em> package (included in the meta-package <em><a href="https://bioconductor.org/packages/3.22/tidyomics" class="external-link">tidyomics</a></em>).</p>
+<p>For illustration, we use data from the <em><a href="https://bioconductor.org/packages/3.22/airway" class="external-link">airway</a></em> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidyomics/tidyomics" class="external-link">tidyomics</a></span><span class="op">)</span></span>
@@ -94,77 +94,94 @@
 <span><span class="co">#&gt; ✖ S4Vectors::tail()        masks utils::tail()</span></span>
 <span><span class="co">#&gt; ✖ tidyseurat::tidy()       masks tidySingleCellExperiment::tidy(), tidySummarizedExperiment::tidy(), generics::tidy()</span></span>
 <span><span class="co">#&gt; ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">airway</span>, package<span class="op">=</span><span class="st">"airway"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">pasilla_tidy</span> <span class="op">&lt;-</span> <span class="fu">tidySummarizedExperiment</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/tidySummarizedExperiment/man/pasilla.html" class="external-link">pasilla</a></span> </span>
-<span><span class="va">pasilla_tidy</span></span>
-<span><span class="co">#&gt; # A SummarizedExperiment-tibble abstraction: 102,193 × 5</span></span>
-<span><span class="co">#&gt; # Features=14599 | Samples=7 | Assays=counts</span></span>
-<span><span class="co">#&gt;    .feature    .sample counts condition type      </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;     </span></span>
-<span><span class="co">#&gt;  1 FBgn0000003 untrt1       0 untreated single_end</span></span>
-<span><span class="co">#&gt;  2 FBgn0000008 untrt1      92 untreated single_end</span></span>
-<span><span class="co">#&gt;  3 FBgn0000014 untrt1       5 untreated single_end</span></span>
-<span><span class="co">#&gt;  4 FBgn0000015 untrt1       0 untreated single_end</span></span>
-<span><span class="co">#&gt;  5 FBgn0000017 untrt1    4664 untreated single_end</span></span>
-<span><span class="co">#&gt;  6 FBgn0000018 untrt1     583 untreated single_end</span></span>
-<span><span class="co">#&gt;  7 FBgn0000022 untrt1       0 untreated single_end</span></span>
-<span><span class="co">#&gt;  8 FBgn0000024 untrt1      10 untreated single_end</span></span>
-<span><span class="co">#&gt;  9 FBgn0000028 untrt1       0 untreated single_end</span></span>
-<span><span class="co">#&gt; 10 FBgn0000032 untrt1    1446 untreated single_end</span></span>
-<span><span class="co">#&gt; # ℹ 40 more rows</span></span></code></pre></div>
+<span><span class="va">airway</span></span>
+<span><span class="co">#&gt; # A SummarizedExperiment-tibble abstraction: 509,416 × 23</span></span>
+<span><span class="co">#&gt; # Features=63677 | Samples=8 | Assays=counts</span></span>
+<span><span class="co">#&gt;    .feature        .sample   counts SampleName cell  dex   albut Run   avgLength</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;           &lt;chr&gt;      &lt;int&gt; &lt;fct&gt;      &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;     &lt;int&gt;</span></span>
+<span><span class="co">#&gt;  1 ENSG00000000003 SRR10395…    679 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  2 ENSG00000000005 SRR10395…      0 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  3 ENSG00000000419 SRR10395…    467 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  4 ENSG00000000457 SRR10395…    260 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  5 ENSG00000000460 SRR10395…     60 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  6 ENSG00000000938 SRR10395…      0 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  7 ENSG00000000971 SRR10395…   3251 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  8 ENSG00000001036 SRR10395…   1433 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  9 ENSG00000001084 SRR10395…    519 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt; 10 ENSG00000001167 SRR10395…    394 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt; # ℹ 40 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 14 more variables: Experiment &lt;fct&gt;, Sample &lt;fct&gt;, BioSample &lt;fct&gt;,</span></span>
+<span><span class="co">#&gt; #   gene_id &lt;chr&gt;, gene_name &lt;chr&gt;, entrezid &lt;int&gt;, gene_biotype &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   gene_seq_start &lt;int&gt;, gene_seq_end &lt;int&gt;, seq_name &lt;chr&gt;, seq_strand &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   seq_coord_system &lt;int&gt;, symbol &lt;chr&gt;, GRangesList &lt;list&gt;</span></span></code></pre></div>
 </div>
-<p>How <code>pasilla_tidy</code> object is printed is controlled by the <code>tidySummarizedExperiment</code> package, and by default it is displayed as a <code>tibble</code>-like object. Note that this behavior can be changed by setting the <code>options(restore_SummarizedExperiment_show = TRUE)</code> option.</p>
+<p>How <code>airway</code> object is printed is controlled by the <code>tidySummarizedExperiment</code> package, and by default it is displayed as a <code>tibble</code>-like object. Note that this behavior can be changed by setting the <code>options(restore_SummarizedExperiment_show = TRUE)</code> option.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Turn off the tibble visualisation</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"restore_SummarizedExperiment_show"</span> <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">pasilla_tidy</span></span>
-<span><span class="co">#&gt; class: SummarizedExperiment </span></span>
-<span><span class="co">#&gt; dim: 14599 7 </span></span>
-<span><span class="co">#&gt; metadata(0):</span></span>
+<span><span class="va">airway</span></span>
+<span><span class="co">#&gt; class: RangedSummarizedExperiment </span></span>
+<span><span class="co">#&gt; dim: 63677 8 </span></span>
+<span><span class="co">#&gt; metadata(1): ''</span></span>
 <span><span class="co">#&gt; assays(1): counts</span></span>
-<span><span class="co">#&gt; rownames(14599): FBgn0000003 FBgn0000008 ... FBgn0261574 FBgn0261575</span></span>
-<span><span class="co">#&gt; rowData names(0):</span></span>
-<span><span class="co">#&gt; colnames(7): untrt1 untrt2 ... trt2 trt3</span></span>
-<span><span class="co">#&gt; colData names(2): condition type</span></span>
+<span><span class="co">#&gt; rownames(63677): ENSG00000000003 ENSG00000000005 ... ENSG00000273492</span></span>
+<span><span class="co">#&gt;   ENSG00000273493</span></span>
+<span><span class="co">#&gt; rowData names(10): gene_id gene_name ... seq_coord_system symbol</span></span>
+<span><span class="co">#&gt; colnames(8): SRR1039508 SRR1039509 ... SRR1039520 SRR1039521</span></span>
+<span><span class="co">#&gt; colData names(9): SampleName cell ... Sample BioSample</span></span>
 <span></span>
 <span><span class="co"># Turn on the tibble visualisation</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"restore_SummarizedExperiment_show"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">pasilla_tidy</span></span>
-<span><span class="co">#&gt; # A SummarizedExperiment-tibble abstraction: 102,193 × 5</span></span>
-<span><span class="co">#&gt; # Features=14599 | Samples=7 | Assays=counts</span></span>
-<span><span class="co">#&gt;    .feature    .sample counts condition type      </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;     </span></span>
-<span><span class="co">#&gt;  1 FBgn0000003 untrt1       0 untreated single_end</span></span>
-<span><span class="co">#&gt;  2 FBgn0000008 untrt1      92 untreated single_end</span></span>
-<span><span class="co">#&gt;  3 FBgn0000014 untrt1       5 untreated single_end</span></span>
-<span><span class="co">#&gt;  4 FBgn0000015 untrt1       0 untreated single_end</span></span>
-<span><span class="co">#&gt;  5 FBgn0000017 untrt1    4664 untreated single_end</span></span>
-<span><span class="co">#&gt;  6 FBgn0000018 untrt1     583 untreated single_end</span></span>
-<span><span class="co">#&gt;  7 FBgn0000022 untrt1       0 untreated single_end</span></span>
-<span><span class="co">#&gt;  8 FBgn0000024 untrt1      10 untreated single_end</span></span>
-<span><span class="co">#&gt;  9 FBgn0000028 untrt1       0 untreated single_end</span></span>
-<span><span class="co">#&gt; 10 FBgn0000032 untrt1    1446 untreated single_end</span></span>
-<span><span class="co">#&gt; # ℹ 40 more rows</span></span></code></pre></div>
+<span><span class="va">airway</span></span>
+<span><span class="co">#&gt; # A SummarizedExperiment-tibble abstraction: 509,416 × 23</span></span>
+<span><span class="co">#&gt; # Features=63677 | Samples=8 | Assays=counts</span></span>
+<span><span class="co">#&gt;    .feature        .sample   counts SampleName cell  dex   albut Run   avgLength</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;           &lt;chr&gt;      &lt;int&gt; &lt;fct&gt;      &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;     &lt;int&gt;</span></span>
+<span><span class="co">#&gt;  1 ENSG00000000003 SRR10395…    679 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  2 ENSG00000000005 SRR10395…      0 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  3 ENSG00000000419 SRR10395…    467 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  4 ENSG00000000457 SRR10395…    260 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  5 ENSG00000000460 SRR10395…     60 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  6 ENSG00000000938 SRR10395…      0 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  7 ENSG00000000971 SRR10395…   3251 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  8 ENSG00000001036 SRR10395…   1433 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt;  9 ENSG00000001084 SRR10395…    519 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt; 10 ENSG00000001167 SRR10395…    394 GSM1275862 N613… untrt untrt SRR1…       126</span></span>
+<span><span class="co">#&gt; # ℹ 40 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 14 more variables: Experiment &lt;fct&gt;, Sample &lt;fct&gt;, BioSample &lt;fct&gt;,</span></span>
+<span><span class="co">#&gt; #   gene_id &lt;chr&gt;, gene_name &lt;chr&gt;, entrezid &lt;int&gt;, gene_biotype &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   gene_seq_start &lt;int&gt;, gene_seq_end &lt;int&gt;, seq_name &lt;chr&gt;, seq_strand &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   seq_coord_system &lt;int&gt;, symbol &lt;chr&gt;, GRangesList &lt;list&gt;</span></span></code></pre></div>
 </div>
-<p>The <code>pasilla_tidy</code> object is a <code>SummarizedExperiment</code> object, and the <code>tidySummarizedExperiment</code> packages adds an invisible layer to abstract the <code>SE</code> object as a <code>tibble</code>. This allows us to use the <code>dplyr</code> package to manipulate the data, and eventually to directly plug data flow into <code>ggplot2</code> for visualization.</p>
+<p>The <code>airway</code> object is a <code>SummarizedExperiment</code> object, and the <code>tidySummarizedExperiment</code> packages adds an invisible layer to abstract the <code>SE</code> object as a <code>tibble</code>. This allows us to use the <code>dplyr</code> package to manipulate the data, and eventually to directly plug data flow into <code>ggplot2</code> for visualization.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pasilla_tidy</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">condition</span> <span class="op">==</span> <span class="st">"untreated"</span>, <span class="va">type</span> <span class="op">==</span> <span class="st">"single_end"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/AnnotationDbi/man/AnnotationDb-class.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">type</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu">group_by</span><span class="op">(</span><span class="va">.feature</span>, <span class="va">.sample</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">airway</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">albut</span> <span class="op">==</span> <span class="st">"untrt"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu">group_by</span><span class="op">(</span><span class="va">.feature</span>, <span class="va">dex</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu">summarise</span><span class="op">(</span>tot_counts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">.sample</span>, y <span class="op">=</span> <span class="va">tot_counts</span><span class="op">+</span><span class="fl">1</span>, fill <span class="op">=</span> <span class="va">.sample</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu">geom_violin</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu">geom_boxplot</span><span class="op">(</span>outliers <span class="op">=</span> <span class="cn">FALSE</span>, width <span class="op">=</span> <span class="fl">0.05</span>, fill <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">pivot_wider</span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">dex</span>, values_from <span class="op">=</span> <span class="va">tot_counts</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">slice_sample</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">trt</span>, y <span class="op">=</span> <span class="va">untrt</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu">geom_density_2d</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"black"</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">geom_point</span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.1</span>, size <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu">scale_x_log10</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu">scale_y_log10</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu">annotation_logticks</span><span class="op">(</span>side <span class="op">=</span> <span class="st">'l'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Sample"</span>, y <span class="op">=</span> <span class="st">"Total counts (log1p)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">annotation_logticks</span><span class="op">(</span>side <span class="op">=</span> <span class="st">'bl'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Dex treated"</span>, y <span class="op">=</span> <span class="st">"Dex untreated"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; tidySummarizedExperiment says: A data frame is returned for independent data analysis.</span></span>
 <span><span class="co">#&gt; `summarise()` has grouped output by '.feature'. You can override using the</span></span>
-<span><span class="co">#&gt; `.groups` argument.</span></span></code></pre></div>
+<span><span class="co">#&gt; `.groups` argument.</span></span>
+<span><span class="co">#&gt; Warning in scale_x_log10(): log-10 transformation introduced infinite values.</span></span>
+<span><span class="co">#&gt; Warning in scale_y_log10(): log-10 transformation introduced infinite values.</span></span>
+<span><span class="co">#&gt; Warning in scale_x_log10(): log-10 transformation introduced infinite values.</span></span>
+<span><span class="co">#&gt; Warning in scale_y_log10(): log-10 transformation introduced infinite values.</span></span>
+<span><span class="co">#&gt; Warning: Removed 36227 rows containing non-finite outside the scale range</span></span>
+<span><span class="co">#&gt; (`stat_density2d()`).</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="how-to-use-tidy-principles-for-rna-seq-analysis_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
@@ -299,15 +316,15 @@
 <span><span class="co">#&gt;  [97] miniUI_0.1.2             restfulr_0.0.15          pillar_1.10.2           </span></span>
 <span><span class="co">#&gt; [100] grid_4.5.1               vctrs_0.6.5              RANN_2.6.2              </span></span>
 <span><span class="co">#&gt; [103] promises_1.3.3           xtable_1.8-4             cluster_2.1.8.1         </span></span>
-<span><span class="co">#&gt; [106] evaluate_1.0.3           readr_2.1.5              cli_3.6.5               </span></span>
-<span><span class="co">#&gt; [109] compiler_4.5.1           Rsamtools_2.25.0         rlang_1.1.6             </span></span>
-<span><span class="co">#&gt; [112] crayon_1.5.3             future.apply_1.11.3      labeling_0.4.3          </span></span>
-<span><span class="co">#&gt; [115] plyr_1.8.9               stringi_1.8.7            viridisLite_0.4.2       </span></span>
-<span><span class="co">#&gt; [118] deldir_2.0-4             BiocParallel_1.43.2      Biostrings_2.77.1       </span></span>
-<span><span class="co">#&gt; [121] lazyeval_0.2.2           spatstat.geom_3.4-1      Matrix_1.7-3            </span></span>
-<span><span class="co">#&gt; [124] RcppHNSW_0.6.0           hms_1.1.3                patchwork_1.3.0         </span></span>
-<span><span class="co">#&gt; [127] future_1.58.0            shiny_1.10.0             ROCR_1.0-11             </span></span>
-<span><span class="co">#&gt; [130] igraph_2.1.4</span></span></code></pre></div>
+<span><span class="co">#&gt; [106] evaluate_1.0.3           isoband_0.2.7            readr_2.1.5             </span></span>
+<span><span class="co">#&gt; [109] cli_3.6.5                compiler_4.5.1           Rsamtools_2.25.0        </span></span>
+<span><span class="co">#&gt; [112] rlang_1.1.6              crayon_1.5.3             future.apply_1.11.3     </span></span>
+<span><span class="co">#&gt; [115] labeling_0.4.3           plyr_1.8.9               stringi_1.8.7           </span></span>
+<span><span class="co">#&gt; [118] viridisLite_0.4.2        deldir_2.0-4             BiocParallel_1.43.2     </span></span>
+<span><span class="co">#&gt; [121] Biostrings_2.77.1        lazyeval_0.2.2           spatstat.geom_3.4-1     </span></span>
+<span><span class="co">#&gt; [124] Matrix_1.7-3             RcppHNSW_0.6.0           hms_1.1.3               </span></span>
+<span><span class="co">#&gt; [127] patchwork_1.3.0          future_1.58.0            shiny_1.10.0            </span></span>
+<span><span class="co">#&gt; [130] ROCR_1.0-11              igraph_2.1.4</span></span></code></pre></div>
 </div>
 </details></section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

@@ -13,8 +13,9 @@ articles:
   how-to-read-paired-end-reads-from-bam-file: how-to-read-paired-end-reads-from-bam-file.html
   how-to-read-single-end-reads-from-bam-file: how-to-read-single-end-reads-from-bam-file.html
   how-to-retrieve-gene-model-from-annotationhub: how-to-retrieve-gene-model-from-annotationhub.html
+  how-to-use-tidy-principles-for-granges-manipulation: how-to-use-tidy-principles-for-granges-manipulation.html
   how-to-use-tidy-principles-for-rna-seq-analysis: how-to-use-tidy-principles-for-rna-seq-analysis.html
-last_built: 2025-06-18T14:24Z
+last_built: 2025-06-19T17:12Z
 urls:
   reference: https://bioconductor.github.io/BiocHowTo/reference
   article: https://bioconductor.github.io/BiocHowTo/articles
