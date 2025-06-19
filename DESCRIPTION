@@ -97,6 +97,7 @@ Imports:
     GenomicRanges,
     BSgenome, 
     tidyomics, 
-    airway
+    airway, 
+    readxl
 URL: https://github.com/bioconductor/BiocHowTo, 
     https://bioconductor.github.io/BiocHowTo/
