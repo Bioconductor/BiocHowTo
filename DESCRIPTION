@@ -96,6 +96,7 @@ Imports:
     rtracklayer,
     GenomicRanges,
     BSgenome, 
-    tidyomics
+    tidyomics, 
+    airway
 URL: https://github.com/bioconductor/BiocHowTo, 
     https://bioconductor.github.io/BiocHowTo/
