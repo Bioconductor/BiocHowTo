@@ -23,6 +23,7 @@ articles:
 
 - title: Tidy principles in Bioconductor
   contents:
+  - how-to-use-tidy-principles-for-granges-manipulation
   - how-to-use-tidy-principles-for-rna-seq-analysis
 
 - title: Accessing genomic annotation data
