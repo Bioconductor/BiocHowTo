@@ -1,0 +1,243 @@
+---
+title: "How to extend S4Vectors::Vector with a small custom class"
+author:
+- "BiocHowTo contributors"
+date: "2026-03-12"
+package: "BiocHowTo"
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{How to extend S4Vectors::Vector with a small custom class}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Goal
+
+This How To shows a minimal, practical pattern for extending a *core*
+Bioconductor S4 class: [`S4Vectors::Vector`].
+
+We implement a `Percentage` class that:
+
+- stores values as **fractions** in `[0, 1]`
+- prints as **percent** with a configurable number of decimals
+- supports a small set of *Vector-like* behaviors (length, show, ordering,
+  coercions)
+- demonstrates the typical “extension checklist” for Bioconductor S4 classes
+
+This article is based on an example shared in
+Bioconductor/BiocClassesWorkingGroup issue #15.
+
+# Prerequisites
+
+```{r}
+library(S4Vectors)
+```
+
+We'll also use `scales` only for pretty printing.
+
+```{r}
+library(scales)
+```
+
+# A checklist for extending `Vector`
+
+When you extend `S4Vectors::Vector`, a helpful checklist is:
+
+1. **Class definition**
+2. **Validity**
+3. **User-facing constructor**
+4. **Parallel slot names**
+5. **show() method**
+6. **Getters / setters** (for new slots)
+7. **Coercions**
+8. Optional: **Ordering** (`order`) and **comparison helpers** (e.g., `sameAsPreviousRow`)
+
+The `Percentage` class below follows these steps.
+
+# Step 1: Define the class
+
+We define an S4 class that *contains* `Vector` and adds two slots:
+
+- `vec`: the underlying numeric fractions
+- `dec`: how many decimals to show when printing
+
+```{r}
+.Percentage <- setClass(
+    "Percentage",
+    contains = "Vector",
+    slots = list(
+        vec = "numeric",
+        dec = "integer"
+    )
+)
+```
+
+# Step 2: Add validity checks
+
+We ensure:
+
+- fractions are between 0 and 1
+- `dec` is a scalar integer
+
+```{r}
+.validate_Percentage <- function(x) {
+    if (any(x@vec > 1.0 | x@vec < 0.0, na.rm = TRUE)) {
+        S4Vectors::wmsg("percentages must be between 0-1")
+    }
+    if (length(x@dec) != 1L) {
+        S4Vectors::wmsg("decimals must be a single integer")
+    }
+    TRUE
+}
+
+setValidity2("Percentage", .validate_Percentage)
+```
+
+# Step 3: Declare parallel slots
+
+Many Bioconductor vector-like classes support the concept of “parallel slots” that should be subset/combined together.
+
+```{r}
+setMethod(
+    "parallel_slot_names", "Percentage",
+    function(x) c("vec", callNextMethod())
+)
+```
+
+# Step 4: Define printing (`show`)
+
+```{r}
+.show_Percentage <- function(object) {
+    cat("Percentage-object (length =", length(object), "):\n")
+    cat(scales::percent(object@vec, accuracy = 1 / 10^object@dec))
+}
+
+setMethod("show", "Percentage", .show_Percentage)
+```
+
+# Step 5: Create a user-facing constructor
+
+A small constructor ensures the object is valid before returning it.
+
+```{r}
+Percentage <- function(fractions, decimals = 1L) {
+    o <- .Percentage(vec = fractions, dec = as.integer(decimals))
+    validObject(o)
+    o
+}
+```
+
+# Step 6: Add basic accessors (getters / setters)
+
+## Access fractions
+
+In the issue example, `score()` is used to extract `vec`. We keep that here.
+
+```{r}
+setMethod("score", "Percentage", function(x) x@vec)
+```
+
+## Get/set decimals
+
+```{r}
+setGeneric("decimals", function(x, ...) standardGeneric("decimals"))
+setMethod("decimals", "Percentage", function(x) x@dec)
+
+setGeneric("decimals<-", function(x, value) standardGeneric("decimals<-"))
+setReplaceMethod("decimals", "Percentage", function(x, value) {
+    x@dec <- as.integer(value)
+    validObject(x)
+    x
+})
+```
+
+# Step 7: Define coercions
+
+Provide a few convenient conversions.
+
+```{r}
+setAs("Percentage", "integer", function(from) as.integer(from@vec * 100))
+setAs("Percentage", "numeric", function(from) from@vec)
+setAs("Percentage", "character", function(from) {
+    scales::percent(from@vec, accuracy = 1 / 10^from@dec)
+})
+setAs("numeric", "Percentage", function(from) Percentage(from))
+```
+
+# Step 8 (optional): Support ordering (and “same as previous row”)
+
+If you want your class to participate naturally in sorting workflows, define `order()`.
+
+```{r}
+.orderPercentage <- function(
+    ...,
+    na.last = TRUE,
+    decreasing = FALSE,
+    method = c("auto", "shell", "radix")
+) {
+    args <- list(...)
+    if (length(args) != 1L)
+        stop("Ordering multiple Percentage-objects not currently supported")
+    order(
+        args[[1]]@vec,
+        na.last = na.last,
+        decreasing = decreasing,
+        method = method
+    )
+}
+
+setMethod("order", "Percentage", .orderPercentage)
+```
+
+Some Bioconductor internals and packages use `sameAsPreviousRow()` for grouping/comparison in vector-like contexts. If you need it, implement it by delegating to the underlying numeric vector.
+
+**Note:** the function name in the issue appears as `sameAsPreviousROW` (uppercase `ROW`). In Bioconductor code this is typically `sameAsPreviousRow` (lowercase `ow`). If you decide to add this, confirm the correct generic name for your context.
+
+```{r, eval=FALSE}
+setMethod(
+    "sameAsPreviousRow", "Percentage", function(x) sameAsPreviousRow(x@vec)
+)
+```
+
+# Try it
+
+```{r}
+p <- Percentage(c(0.1, 0.25, 0.5), decimals = 1)
+p
+score(p)
+
+decimals(p) <- 3
+p
+
+as(p, "character")
+as(p, "integer")
+order(p)
+```
+
+# Notes and common pitfalls
+
+- **Validity should be strict**: it saves debugging time later.
+- **Parallel slots**: if you add additional data slots that must be subsetted
+  alongside the core data, include them in `parallel_slot_names()`.
+- **Decide what “Vector-like” means for your class**: for some extensions you
+  may also need methods for subsetting, combining, `length`, `[` / `[[`, `c`,
+  etc. (many are inherited, but not always sufficient depending on slot
+  structure).
+- **Naming**: consider using a public class name that won't collide with
+  existing packages.
+
+# Session info
+
+```{r}
+sessionInfo()
+```
