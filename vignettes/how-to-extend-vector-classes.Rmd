@@ -23,61 +23,58 @@ knitr::opts_chunk$set(
 
 # Goal
 
-This How To shows a minimal, practical pattern for extending a *core*
-Bioconductor S4 class: [`S4Vectors::Vector`].
+This How-To shows a minimal, practical pattern for extending a *core*
+Bioconductor S4 **VIRTUAL** class: `?S4Vectors::Vector-class`.
 
 We implement a `Percentage` class that:
 
-- stores values as **fractions** in `[0, 1]`
-- prints as **percent** with a configurable number of decimals
+- stores values as **decimals** between zero and one (inclusive)
+- prints as a **percent** with a configurable number of decimal places
 - supports a small set of *Vector-like* behaviors (length, show, ordering,
   coercions)
-- demonstrates the typical “extension checklist” for Bioconductor S4 classes
-
-This article is based on an example shared in
-Bioconductor/BiocClassesWorkingGroup issue #15.
+- demonstrates the typical "extension checklist" for Bioconductor S4 classes
 
 # Prerequisites
 
 ```{r}
 library(S4Vectors)
-```
-
-We'll also use `scales` only for pretty printing.
-
-```{r}
 library(scales)
 ```
 
+Note. We use `scales` only for pretty printing.
+
 # A checklist for extending `Vector`
 
-When you extend `S4Vectors::Vector`, a helpful checklist is:
+When extending the `Vector` virtual class in `S4Vectors`, a developer should
+check the following list of steps to ensure a well-behaved class:
 
-1. **Class definition**
-2. **Validity**
-3. **User-facing constructor**
-4. **Parallel slot names**
-5. **show() method**
-6. **Getters / setters** (for new slots)
-7. **Coercions**
-8. Optional: **Ordering** (`order`) and **comparison helpers** (e.g., `sameAsPreviousRow`)
+1. Class definition
+2. Validity
+3. User-facing constructor
+4. Parallel slot names
+5. show() method
+6. Setters / Getters (for new slots)
+7. Coercions
+8. Optional: Ordering (with `order`)
+9. Optional: comparison helpers (e.g., `sameAsPreviousROW`)
 
 The `Percentage` class below follows these steps.
 
 # Step 1: Define the class
 
-We define an S4 class that *contains* `Vector` and adds two slots:
+We define an S4 class that *contains* the `Vector` virtual class and adds two
+slots:
 
-- `vec`: the underlying numeric fractions
-- `dec`: how many decimals to show when printing
+- `decimal`: the numeric decimals
+- `nplaces`: how many decimal places to show when printing
 
 ```{r}
 .Percentage <- setClass(
     "Percentage",
     contains = "Vector",
     slots = list(
-        vec = "numeric",
-        dec = "integer"
+        decimals = "numeric",
+        nplaces = "integer"
     )
 )
 ```
@@ -86,55 +83,57 @@ We define an S4 class that *contains* `Vector` and adds two slots:
 
 We ensure:
 
-- fractions are between 0 and 1
-- `dec` is a scalar integer
+- decimal **values** are between 0 and 1
+- `nplaces` is a scalar integer of the number of decimal **places**
 
 ```{r}
 .validate_Percentage <- function(x) {
-    if (any(x@vec > 1.0 | x@vec < 0.0, na.rm = TRUE)) {
-        S4Vectors::wmsg("percentages must be between 0-1")
-    }
-    if (length(x@dec) != 1L) {
-        S4Vectors::wmsg("decimals must be a single integer")
-    }
-    TRUE
+    msg <- NULL
+    if (any(x@decimals > 1.0 | x@decimals < 0.0, na.rm = TRUE))
+        msg <- c(msg, "All decimal values must be between 0 and 1")
+    if (length(x@nplaces) != 1L || !is.integer(x@nplaces) || is.na(x@nplaces))
+        msg <- c(msg, "The number of decimal places must be a single integer")
+    msg
 }
 
 setValidity2("Percentage", .validate_Percentage)
 ```
 
-# Step 3: Declare parallel slots
+# Step 3: Create a user-facing constructor
 
-Many Bioconductor vector-like classes support the concept of “parallel slots” that should be subset/combined together.
+A constructor function provides a user-friendly interface to create objects of
+the class. It should call the internal class constructor and that, in turn,
+will ensure that the object is valid.
+
+```{r}
+Percentage <- function(values, nplaces = 1L) {
+    .Percentage(
+        decimals = values, nplaces = as.integer(nplaces)
+    )
+}
+```
+
+# Step 4: Declare parallel slots
+
+Many Bioconductor vector-like classes support the concept of "parallel slots"
+that should be subset together or combined.
 
 ```{r}
 setMethod(
     "parallel_slot_names", "Percentage",
-    function(x) c("vec", callNextMethod())
+    function(x) c("decimals", callNextMethod())
 )
 ```
 
-# Step 4: Define printing (`show`)
+# Step 5: Define printing (`show`)
 
 ```{r}
 .show_Percentage <- function(object) {
     cat("Percentage-object (length =", length(object), "):\n")
-    cat(scales::percent(object@vec, accuracy = 1 / 10^object@dec))
+    cat(scales::percent(object@decimals, accuracy = 1 / 10^object@decimals))
 }
 
 setMethod("show", "Percentage", .show_Percentage)
-```
-
-# Step 5: Create a user-facing constructor
-
-A small constructor ensures the object is valid before returning it.
-
-```{r}
-Percentage <- function(fractions, decimals = 1L) {
-    o <- .Percentage(vec = fractions, dec = as.integer(decimals))
-    validObject(o)
-    o
-}
 ```
 
 # Step 6: Add basic accessors (getters / setters)
@@ -144,32 +143,32 @@ Percentage <- function(fractions, decimals = 1L) {
 In the issue example, `score()` is used to extract `vec`. We keep that here.
 
 ```{r}
-setMethod("score", "Percentage", function(x) x@vec)
+setMethod("score", "Percentage", function(x) x@decimals)
 ```
 
 ## Get/set decimals
 
 ```{r}
-setGeneric("decimals", function(x, ...) standardGeneric("decimals"))
-setMethod("decimals", "Percentage", function(x) x@dec)
+setGeneric("places", function(x, ...) standardGeneric("places"))
+setMethod("places", "Percentage", function(x) x@nplaces)
 
-setGeneric("decimals<-", function(x, value) standardGeneric("decimals<-"))
-setReplaceMethod("decimals", "Percentage", function(x, value) {
-    x@dec <- as.integer(value)
+setGeneric("places<-", function(x, value) standardGeneric("places<-"))
+setReplaceMethod("places", "Percentage", function(x, value) {
+    x@nplaces <- as.integer(value)
     validObject(x)
     x
 })
 ```
 
-# Step 7: Define coercions
+# Step 7: Coercion methods
 
 Provide a few convenient conversions.
 
 ```{r}
-setAs("Percentage", "integer", function(from) as.integer(from@vec * 100))
-setAs("Percentage", "numeric", function(from) from@vec)
+setAs("Percentage", "integer", function(from) as.integer(from@decimals * 100))
+setAs("Percentage", "numeric", function(from) from@decimals)
 setAs("Percentage", "character", function(from) {
-    scales::percent(from@vec, accuracy = 1 / 10^from@dec)
+    scales::percent(from@decimals, accuracy = 1 / 10^from@decimals)
 })
 setAs("numeric", "Percentage", function(from) Percentage(from))
 ```
@@ -189,7 +188,7 @@ If you want your class to participate naturally in sorting workflows, define `or
     if (length(args) != 1L)
         stop("Ordering multiple Percentage-objects not currently supported")
     order(
-        args[[1]]@vec,
+        args[[1]]@decimals,
         na.last = na.last,
         decreasing = decreasing,
         method = method
@@ -205,18 +204,18 @@ Some Bioconductor internals and packages use `sameAsPreviousRow()` for grouping/
 
 ```{r, eval=FALSE}
 setMethod(
-    "sameAsPreviousRow", "Percentage", function(x) sameAsPreviousRow(x@vec)
+    "sameAsPreviousRow", "Percentage", function(x) sameAsPreviousRow(x@decimals)
 )
 ```
 
 # Try it
 
 ```{r}
-p <- Percentage(c(0.1, 0.25, 0.5), decimals = 1)
+p <- Percentage(c(0.1, 0.25, 0.5), nplaces = 1L)
 p
 score(p)
 
-decimals(p) <- 3
+places(p) <- 3
 p
 
 as(p, "character")
