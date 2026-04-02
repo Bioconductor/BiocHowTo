@@ -4,3 +4,4 @@
 ^vignettes/*_files$
 ^_pkgdown.yml$
 ^\.github$
+^USE_SKILLS\.md$
