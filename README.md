@@ -46,3 +46,11 @@ To suggest a new topic for a HowTo, open an issue and provide some more
 details of your suggestion. If you would like to take on one of the open 
 issues, either assign yourself (if possible), or comment in the issue, and 
 one of the administrators can assign you. 
+
+## AI Skills for Bioconductor Tasks
+
+The `inst/skills/` directory contains structured how-to guides ("skills") for
+common Bioconductor tasks formatted for use as context with AI coding
+assistants. See [USE_SKILLS.md](USE_SKILLS.md) for the full list of available
+skills and usage instructions for Claude Code, GitHub Copilot / Copilot CLI,
+and OpenAI Codex.
