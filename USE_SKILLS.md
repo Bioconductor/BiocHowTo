@@ -1,11 +1,15 @@
 # Using BiocHowTo Skills with AI Coding Assistants
 
 The `inst/skills/` directory contains structured how-to guides ("skills") for
-common Bioconductor tasks. Each skill is a self-contained Markdown file with
-YAML front matter (`name`, `description`), required packages, step-by-step
-code, key functions, and notes. These files are designed to be loaded as
-context into AI coding assistants so that the assistant has precise,
-up-to-date Bioconductor knowledge when helping you write R code.
+common Bioconductor tasks. Each skill follows the
+[AgentSkills open standard](https://agentskills.io/specification): a directory
+named after the skill containing a `SKILL.md` file with YAML front matter
+(`name`, `description`, and optional fields) followed by step-by-step
+instructions, required packages, key functions, and notes.
+
+AI coding assistants that support the AgentSkills standard automatically
+discover and apply these files when they are placed in the correct location for
+each tool.
 
 ## Available Skills
 
@@ -25,8 +29,8 @@ up-to-date Bioconductor knowledge when helping you write R code.
 | `use-tidy-principles-for-granges-manipulation` | Manipulate GRanges objects using dplyr-style tidy verbs via the tidyomics/plyranges Bioconductor ecosystem |
 | `use-tidy-principles-for-rna-seq-analysis` | Manipulate SummarizedExperiment and SingleCellExperiment RNA-seq objects using tidy dplyr-style verbs via tidyomics |
 
-Each skill file lives at `inst/skills/<skill-name>/skill.md` in this
-repository. If you have installed the package, you can locate the skills
+Each skill file lives at `inst/skills/<skill-name>/SKILL.md` in this
+repository. If you have installed the R package, you can locate the skills
 directory with:
 
 ```r
@@ -37,117 +41,90 @@ system.file("skills", package = "BiocHowTo")
 
 ## Using Skills with Claude Code
 
-[Claude Code](https://docs.anthropic.com/en/docs/claude-code) is Anthropic's
-agentic coding CLI. Load one or more skill files as context with the
-`--context` flag before describing your task, or use the `/add-file` slash
-command inside an interactive session.
+[Claude Code](https://docs.anthropic.com/en/docs/claude-code) discovers
+`SKILL.md` files automatically from two locations:
 
-**Load a single skill at startup:**
+- **Project-level** (applies to one repository): `.claude/skills/<skill-name>/SKILL.md`
+- **User-level** (applies globally): `~/.claude/skills/<skill-name>/SKILL.md`
 
-```bash
-claude --context inst/skills/compute-read-coverage/skill.md \
-  "Write R code to compute read coverage for my BAM file"
-```
-
-**Load all skills at startup:**
+### Install a single skill (project-level)
 
 ```bash
-SKILL_FILES=$(find inst/skills -name "skill.md" | tr '\n' ' ')
-claude --context $SKILL_FILES "Help me work with Bioconductor"
+mkdir -p .claude/skills/compute-read-coverage
+cp inst/skills/compute-read-coverage/SKILL.md \
+   .claude/skills/compute-read-coverage/SKILL.md
 ```
 
-**Inside an interactive session (`claude`):**
-
-```
-> /add-file inst/skills/compute-read-coverage/skill.md
-> Now write code to compute coverage for untreated1_chr4.bam
-```
-
-**Persist skills for a project** by appending their contents to `CLAUDE.md`
-at the root of your project:
+### Install all skills at once (project-level)
 
 ```bash
-for f in inst/skills/*/skill.md; do
-  echo "" >> CLAUDE.md
-  cat "$f" >> CLAUDE.md
+for skill_dir in inst/skills/*/; do
+  skill_name=$(basename "$skill_dir")
+  mkdir -p ".claude/skills/$skill_name"
+  cp "$skill_dir/SKILL.md" ".claude/skills/$skill_name/SKILL.md"
 done
 ```
+
+### Install all skills globally (user-level)
+
+```bash
+for skill_dir in inst/skills/*/; do
+  skill_name=$(basename "$skill_dir")
+  mkdir -p "$HOME/.claude/skills/$skill_name"
+  cp "$skill_dir/SKILL.md" "$HOME/.claude/skills/$skill_name/SKILL.md"
+done
+```
+
+Once installed, Claude Code will automatically apply the relevant skill
+whenever you ask a Bioconductor-related question — no extra flags needed.
 
 ---
 
 ## Using Skills with GitHub Copilot
 
-### VS Code / Copilot Chat
+[GitHub Copilot](https://docs.github.com/en/copilot) (VS Code, JetBrains,
+CLI) discovers `SKILL.md` files automatically from `.agents/skills/<skill-name>/SKILL.md`
+at the root of your repository.
 
-In Visual Studio Code, open Copilot Chat and attach a skill file using the
-**Attach context** (📎) button or with the `#file:` syntax:
-
-```
-#file:inst/skills/compute-read-coverage/skill.md
-How do I compute per-base coverage from my BAM file?
-```
-
-To make skills available to every Copilot Chat conversation in a repository,
-append the relevant skill content to `.github/copilot-instructions.md`:
+### Install a single skill
 
 ```bash
-cat inst/skills/compute-read-coverage/skill.md >> .github/copilot-instructions.md
+mkdir -p .agents/skills/compute-read-coverage
+cp inst/skills/compute-read-coverage/SKILL.md \
+   .agents/skills/compute-read-coverage/SKILL.md
 ```
 
-Or add all skills at once:
+### Install all skills at once
 
 ```bash
-for f in inst/skills/*/skill.md; do
-  echo "" >> .github/copilot-instructions.md
-  cat "$f" >> .github/copilot-instructions.md
+for skill_dir in inst/skills/*/; do
+  skill_name=$(basename "$skill_dir")
+  mkdir -p ".agents/skills/$skill_name"
+  cp "$skill_dir/SKILL.md" ".agents/skills/$skill_name/SKILL.md"
 done
 ```
 
-### GitHub Copilot CLI
-
-[GitHub Copilot CLI](https://docs.github.com/en/copilot/using-github-copilot/using-github-copilot-in-the-command-line)
-(`gh copilot`) can incorporate skill content by piping it before your
-question:
-
-```bash
-# Suggest a shell command, providing skill context inline
-{ cat inst/skills/compute-read-coverage/skill.md; \
-  echo "How do I compute read coverage in R?"; } \
-  | gh copilot suggest -t shell
-```
-
-For R-code questions, compose a prompt that includes the skill text:
-
-```bash
-gh copilot suggest -t shell \
-  "$(cat inst/skills/read-single-end-reads-from-bam-file/skill.md)
-   Write the R code to read a BAM file"
-```
+Copilot will then automatically apply relevant Bioconductor skills when
+answering questions in your repository without any extra configuration.
 
 ---
 
 ## Using Skills with OpenAI Codex
 
-[OpenAI Codex CLI](https://github.com/openai/codex) (`codex`) accepts
-arbitrary context with the `--context` flag (or `-c`). Pass one or more skill
-files alongside your prompt:
+The [OpenAI Codex CLI](https://github.com/openai/codex) (`codex`) does not
+natively read `SKILL.md` files — it is invoked as a subprocess by agentic
+assistants rather than loading skills itself. The recommended approach is to
+use the Bioconductor skills with **Claude Code** or **GitHub Copilot** (both
+of which support the AgentSkills standard), and let those assistants
+coordinate with Codex when needed.
+
+If you want to provide a skill as context for a one-off `codex exec` call, you
+can embed the skill content directly in your prompt:
 
 ```bash
-# Single skill
-codex --context inst/skills/compute-read-coverage/skill.md \
-  "Write R code to compute read coverage from a BAM file"
+SKILL=$(cat inst/skills/compute-read-coverage/SKILL.md)
+codex exec "$SKILL
 
-# Multiple skills
-codex \
-  --context inst/skills/read-single-end-reads-from-bam-file/skill.md \
-  --context inst/skills/compute-read-coverage/skill.md \
-  "Read a BAM file and compute per-chromosome coverage"
+Write R code to compute per-chromosome coverage from my BAM file."
 ```
 
-To load every skill in the package:
-
-```bash
-CONTEXT_FLAGS=$(find inst/skills -name "skill.md" \
-  | awk '{print "--context " $0}' | tr '\n' ' ')
-eval "codex $CONTEXT_FLAGS 'Help me analyse my RNA-seq BAM files'"
-```
