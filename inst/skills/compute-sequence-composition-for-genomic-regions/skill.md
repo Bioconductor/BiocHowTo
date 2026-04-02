@@ -1,4 +1,5 @@
 ---
+name: compute-sequence-composition-for-genomic-regions
 description: Compute GC content and CpG observed/expected ratio for genomic regions using Bioconductor
 ---
 

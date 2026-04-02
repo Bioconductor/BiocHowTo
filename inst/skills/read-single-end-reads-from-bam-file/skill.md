@@ -1,4 +1,5 @@
 ---
+name: read-single-end-reads-from-bam-file
 description: Load single-end reads from a BAM file into a GAlignments object using Bioconductor
 ---
 

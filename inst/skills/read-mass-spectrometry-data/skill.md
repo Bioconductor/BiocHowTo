@@ -1,4 +1,5 @@
 ---
+name: read-mass-spectrometry-data
 description: Load raw mass spectrometry data from mzML files into a Bioconductor Spectra object
 ---
 

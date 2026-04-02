@@ -1,4 +1,5 @@
 ---
+name: read-big-bam-file-in-chunks
 description: Iterate through a large BAM file in memory-efficient chunks using Bioconductor
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: get-exon-intron-sequence-for-gene
 description: Retrieve exon and intron DNA sequences for a specific gene using Bioconductor
 ---
 

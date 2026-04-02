@@ -1,4 +1,5 @@
 ---
+name: compute-read-coverage
 description: Compute per-base read coverage from a BAM file using Bioconductor's GenomicAlignments package
 ---
 

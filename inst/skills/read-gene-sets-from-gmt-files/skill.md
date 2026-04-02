@@ -1,4 +1,5 @@
 ---
+name: read-gene-sets-from-gmt-files
 description: Read gene sets from GMT files (e.g. MSigDB) into Bioconductor GeneSetCollection objects
 ---
 

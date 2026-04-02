@@ -1,4 +1,5 @@
 ---
+name: read-paired-end-reads-from-bam-file
 description: Load paired-end reads from a BAM file as GAlignmentPairs or GAlignmentsList using Bioconductor
 ---
 

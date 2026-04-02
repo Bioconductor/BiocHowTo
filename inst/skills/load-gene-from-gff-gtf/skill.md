@@ -1,4 +1,5 @@
 ---
+name: load-gene-from-gff-gtf
 description: Import a gene model from a GFF or GTF file as a TxDb object using Bioconductor
 ---
 

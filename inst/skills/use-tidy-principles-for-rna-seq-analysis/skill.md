@@ -1,4 +1,5 @@
 ---
+name: use-tidy-principles-for-rna-seq-analysis
 description: Manipulate SummarizedExperiment and SingleCellExperiment RNA-seq objects using tidy dplyr-style verbs via tidyomics
 ---
 

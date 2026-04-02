@@ -1,4 +1,5 @@
 ---
+name: extract-promoter-sequences
 description: Extract promoter DNA sequences for any organism's genes using Bioconductor
 ---
 

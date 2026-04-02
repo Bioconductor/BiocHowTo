@@ -1,4 +1,5 @@
 ---
+name: use-tidy-principles-for-granges-manipulation
 description: Manipulate GRanges objects using dplyr-style tidy verbs via the tidyomics/plyranges Bioconductor ecosystem
 ---
 

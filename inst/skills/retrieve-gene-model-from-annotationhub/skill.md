@@ -1,4 +1,5 @@
 ---
+name: retrieve-gene-model-from-annotationhub
 description: Download a gene model from AnnotationHub as a GRanges or GRangesList object using Bioconductor
 ---
 
