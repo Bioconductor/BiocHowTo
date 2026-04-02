@@ -80,13 +80,23 @@ whenever you ask a Bioconductor-related question — no extra flags needed.
 
 ---
 
-## Using Skills with GitHub Copilot
+## Using Skills with GitHub Copilot and OpenAI Codex
 
-[GitHub Copilot](https://docs.github.com/en/copilot) (VS Code, JetBrains,
-CLI) discovers `SKILL.md` files automatically from `.agents/skills/<skill-name>/SKILL.md`
-at the root of your repository.
+Both [GitHub Copilot](https://docs.github.com/en/copilot) and the
+[OpenAI Codex CLI](https://developers.openai.com/codex/skills) discover
+`SKILL.md` files from the same `.agents/skills/` directory structure, so a
+single installation serves both tools.
 
-### Install a single skill
+Codex scans `.agents/skills/` in every directory from your current working
+directory up to the repository root, and also reads from `$HOME/.agents/skills/`
+for user-level skills.
+
+| Scope | Location | Effect |
+|---|---|---|
+| Repository (repo root) | `.agents/skills/<name>/SKILL.md` | Available to everyone using the repository |
+| User (global) | `~/.agents/skills/<name>/SKILL.md` | Available across all repositories for the current user |
+
+### Install a single skill (repository-level)
 
 ```bash
 mkdir -p .agents/skills/compute-read-coverage
@@ -94,7 +104,7 @@ cp inst/skills/compute-read-coverage/SKILL.md \
    .agents/skills/compute-read-coverage/SKILL.md
 ```
 
-### Install all skills at once
+### Install all skills at once (repository-level)
 
 ```bash
 for skill_dir in inst/skills/*/; do
@@ -104,27 +114,16 @@ for skill_dir in inst/skills/*/; do
 done
 ```
 
-Copilot will then automatically apply relevant Bioconductor skills when
-answering questions in your repository without any extra configuration.
-
----
-
-## Using Skills with OpenAI Codex
-
-The [OpenAI Codex CLI](https://github.com/openai/codex) (`codex`) does not
-natively read `SKILL.md` files — it is invoked as a subprocess by agentic
-assistants rather than loading skills itself. The recommended approach is to
-use the Bioconductor skills with **Claude Code** or **GitHub Copilot** (both
-of which support the AgentSkills standard), and let those assistants
-coordinate with Codex when needed.
-
-If you want to provide a skill as context for a one-off `codex exec` call, you
-can embed the skill content directly in your prompt:
+### Install all skills globally (user-level)
 
 ```bash
-SKILL=$(cat inst/skills/compute-read-coverage/SKILL.md)
-codex exec "$SKILL
-
-Write R code to compute per-chromosome coverage from my BAM file."
+for skill_dir in inst/skills/*/; do
+  skill_name=$(basename "$skill_dir")
+  mkdir -p "$HOME/.agents/skills/$skill_name"
+  cp "$skill_dir/SKILL.md" "$HOME/.agents/skills/$skill_name/SKILL.md"
+done
 ```
+
+Once installed, both Copilot and Codex will automatically discover and apply
+relevant Bioconductor skills — no extra flags or configuration needed.
 
